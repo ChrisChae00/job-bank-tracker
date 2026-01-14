@@ -61,6 +61,22 @@ def parse_job_listings(html_content):
 
     return job_data_list
 
+def load_existing_ids(filename):
+    if not os.path.exists(filename):
+        return set()
+    
+    existing_ids = set()
+    try:
+        with open(filename, mode='r', encoding='utf-8-sig') as csvfile:
+            reader = csv.DictReader(csvfile, fieldnames=['id'])
+            for row in reader:
+                existing_ids.add(row['id'])
+        print(f"Loaded {len(existing_ids)} existing job IDs from {filename}.")
+    except Exception as e:
+        print(f"Error loading existing IDs from {filename}: {e}")   
+    return existing_ids
+
+
 def save_to_csv(job_data_list, filename='job_listings.csv'):
     if not job_data_list:
         print("No job data to save.")
@@ -131,7 +147,7 @@ def run_selenium_scraper():
         driver.get(BASE_URL)
         
         time.sleep(5)  # Initial wait for page load
-        seen_ids = set() # To prevent duplicates as the page grows longer
+        seen_ids = load_existing_ids('job_listings.csv')  # To prevent duplicates as the page grows longer
 
         for i in range(10):  # Adjust the range for more or fewer scrolls
             print(f"\nProcessing Page/Section {i + 1}...")
