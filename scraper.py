@@ -12,11 +12,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, StaleElementReferenceException
 
 # Configuration
 BASE_URL = "https://www.jobbank.gc.ca/jobsearch/jobsearch?fcid=3001&fcid=3019&fcid=3739&fcid=5395&fcid=15885&fcid=22534&fcid=22887&fcid=25803&fcid=296425&fcid=296531&fcid=297197&fcid=297520&fn21=12010&fn21=20012&fn21=21211&fn21=21223&fn21=21232&term=data&term=software+developer&sort=M&fprov=AB&fprov=BC&fprov=ON&fprov=QC"
-AJAX_URL = "https://www.jobbank.gc.ca/jobsearch/job_search_loader.xhtml"
 
 def clean_text(text):
     if not text:
@@ -84,40 +83,44 @@ def save_to_csv(job_data_list, filename='job_listings.csv'):
         dict_writer.writerows(job_data_list)
 
 def more_results_button(driver, current_article_count):
-    try:
-        more_button = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.ID, 'moreresultbutton'))
-        )
-        driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", more_button)
-        time.sleep(random.uniform(1, 2))  # Random sleep to mimic human behavior
-        
-        more_button.click()
-        print(" - > Clicked 'More Results' button (1st attempt).")
-
+    for attempt in range(1, 4):
         try:
-            WebDriverWait(driver, 5).until(
-                lambda d: len(d.find_elements(By.TAG_NAME, 'article')) > current_article_count
+            print(f" - > [{attempt}/3] Attempt. Looking for 'Show more' button...")
+            
+            more_button = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.ID, 'moreresultbutton'))
             )
-            print(" - > New jobs loaded successfully (after 1st attempt).")
-            time.sleep(random.uniform(1, 2))  # Additional wait to ensure content is
-            return True
-        
-        except TimeoutException:
-            print(" - > No new jobs loaded yet, trying again (2nd attempt)...")
+            
             driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", more_button)
-            time.sleep(random.uniform(1, 2))  # Random sleep to mimic human behavior
-            more_button.click()
+            time.sleep(1) 
 
-            webdriver_wait = WebDriverWait(driver, 10).until(
+            try:
+                more_button.click()
+            except Exception:
+                driver.execute_script("arguments[0].click();", more_button)
+            
+            print(" - > 'Show more' button clicked. Waiting for new data to load...")
+
+            WebDriverWait(driver, 10).until(
                 lambda d: len(d.find_elements(By.TAG_NAME, 'article')) > current_article_count
             )
-            print(" - > New jobs loaded successfully (after 2nd attempt).")
-            time.sleep(random.uniform(1, 2))  # Additional wait to ensure content is
-            return True
-        
-    except Exception as e:
-        print(" - > No more 'More Results' button found or timeout reached.")
-        return False
+            
+            print(f" - > New job listings loaded successfully.")
+            time.sleep(1) 
+            return True 
+
+        except TimeoutException:
+            print(f" - > [{attempt}/3] Timeout waiting for new job listings. Retrying...")
+            time.sleep(2)
+            continue 
+            
+        except Exception as e:
+            print(f" - > [{attempt}/3] Exception occurred: {e}. Retrying...")
+            time.sleep(2)
+            continue
+
+    print(" - > Failed to load new job listings after 3 attempts. Ending scraping.")
+    return False
     
 def run_selenium_scraper():
     options = webdriver.ChromeOptions()
@@ -130,7 +133,7 @@ def run_selenium_scraper():
         time.sleep(5)  # Initial wait for page load
         seen_ids = set() # To prevent duplicates as the page grows longer
 
-        for i in range(5):  # Adjust the range for more or fewer scrolls
+        for i in range(10):  # Adjust the range for more or fewer scrolls
             print(f"\nProcessing Page/Section {i + 1}...")
 
             html = driver.page_source
