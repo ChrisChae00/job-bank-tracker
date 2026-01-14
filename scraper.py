@@ -5,22 +5,17 @@ import time
 import random
 from bs4 import BeautifulSoup
 
+# Selenium Imports
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
+
 # Configuration
 BASE_URL = "https://www.jobbank.gc.ca/jobsearch/jobsearch?fcid=3001&fcid=3019&fcid=3739&fcid=5395&fcid=15885&fcid=22534&fcid=22887&fcid=25803&fcid=296425&fcid=296531&fcid=297197&fcid=297520&fn21=12010&fn21=20012&fn21=21211&fn21=21223&fn21=21232&term=data&term=software+developer&sort=M&fprov=AB&fprov=BC&fprov=ON&fprov=QC"
 AJAX_URL = "https://www.jobbank.gc.ca/jobsearch/job_search_loader.xhtml"
-
-headers = {
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    "X-Requested-With": "XMLHttpRequest",
-    "Accept": "text/html, */*; q=0.01",
-    "Accept-Language": "en-CA,en-US;q=0.9,en;q=0.8",
-    "Referer": BASE_URL, 
-    "Connection": "keep-alive",
-    "Sec-Fetch-Dest": "empty",
-    "Sec-Fetch-Mode": "cors",
-    "Sec-Fetch-Site": "same-origin",
-    "Priority": "u=1"
-}
 
 def clean_text(text):
     if not text:
@@ -87,58 +82,59 @@ def save_to_csv(job_data_list, filename='job_listings.csv'):
             
         dict_writer.writerows(job_data_list)
 
-def run_scraper():
-    session = requests.Session()
-    session.headers.update(headers)
-    
-    print("Fetching initial job listings page...")
+def run_selenium_scraper():
+    options = webdriver.ChromeOptions()
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
     try:
-        response = session.get(BASE_URL)
-        response.raise_for_status()
-    except Exception as e:
-        print(f"An error occurred while fetching the initial page: {e}")
-        return
+        print("Starting browser and navigating to Job Bank website...")
+        driver.get(BASE_URL)
+        
+        time.sleep(5)  # Initial wait for page load
+        seen_ids = set() # To prevent duplicates as the page grows longer
 
-    token = session.cookies.get('oam.Flash.READERMAP.TOKEN')
-    print(f"Initial token: {token}")
+        for i in range(5):  # Adjust the range for more or fewer scrolls
+            print(f"\nProcessing Page/Section {i + 1}...")
 
-    first_page_jobs = parse_job_listings(response.text)
-    save_to_csv(first_page_jobs)
-    print(f"Fetched and saved {len(first_page_jobs)} job listings from the first page.")
-
-    # Scrape subsequent pages via AJAX
-    for page in range(2, 11): 
-        print(f"\n{page}th page scraping in progress...")
-
-        try:
-            ajax_response = session.get(AJAX_URL)
-
-            if ajax_response.status_code != 200:
-                print(f"Failed to fetch page {page}. Status code: {ajax_response.status_code}")
-                print(f"Current cookies: {list(session.cookies.get_dict().keys())}")
-                break
-
-            new_token = session.cookies.get('oam.Flash.READERMAP.TOKEN')
-            if new_token != token:
-                print(f"Token updated from {token} to {new_token}")
-                token = new_token
-            else:
-                print("Token remains unchanged.")
-
-            new_jobs = parse_job_listings(ajax_response.text)
-            if not new_jobs:
-                print(f"No more job listings found on page {page}. Stopping.")
-                break
-                
-            save_to_csv(new_jobs)
+            html = driver.page_source
+            all_jobs = parse_job_listings(html)
+            new_jobs = [job for job in all_jobs if job['id'] not in seen_ids]
+            for job in new_jobs:
+                seen_ids.add(job['id'])
             
-        except Exception as e:
-            print(f"An error occurred while fetching page {page}: {e}")
-            break
+            if new_jobs:
+                save_to_csv(new_jobs)
+                print(f" - > Saved {len(new_jobs)} new jobs. (Total: {len(seen_ids)})")
+            else:
+                print(" - > No new jobs found in current section.")
 
-        sleep_time = random.uniform(3, 6)
-        print(f"Sleeping for {sleep_time:.2f} seconds to mimic human behavior.")
-        time.sleep(sleep_time)
+            current_article_count = len(all_jobs) 
+
+            # Attempt to click the "More Results" button
+            try:
+                more_button = WebDriverWait(driver, 10).until(
+                    EC.element_to_be_clickable((By.ID, 'moreresultbutton'))
+                )
+
+                driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", more_button)
+                time.sleep(random.uniform(1, 2))  # Random sleep to mimic human behavior
+                more_button.click()
+                print(" - > Clicked 'More Results' button")
+
+                print(" - > Waiting for new jobs to load...")
+                WebDriverWait(driver, 15).until(
+                    lambda d: len(d.find_elements(By.TAG_NAME, 'article')) > current_article_count
+                )
+                time.sleep(random.uniform(1, 2))  # Additional wait to ensure content is fully loaded
+
+            except Exception as e:
+                print(" - > No more 'More Results' button found or error occurred:", str(e))
+                break
+    
+    finally:
+        print("\nScraping completed. Total unique job found:", len(seen_ids))
+        driver.quit()
+
 
 if __name__ == "__main__":
-    run_scraper()
+    run_selenium_scraper()
