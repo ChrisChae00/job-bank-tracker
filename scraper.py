@@ -12,6 +12,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.common.exceptions import TimeoutException
 
 # Configuration
 BASE_URL = "https://www.jobbank.gc.ca/jobsearch/jobsearch?fcid=3001&fcid=3019&fcid=3739&fcid=5395&fcid=15885&fcid=22534&fcid=22887&fcid=25803&fcid=296425&fcid=296531&fcid=297197&fcid=297520&fn21=12010&fn21=20012&fn21=21211&fn21=21223&fn21=21232&term=data&term=software+developer&sort=M&fprov=AB&fprov=BC&fprov=ON&fprov=QC"
@@ -82,6 +83,42 @@ def save_to_csv(job_data_list, filename='job_listings.csv'):
             
         dict_writer.writerows(job_data_list)
 
+def more_results_button(driver, current_article_count):
+    try:
+        more_button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.ID, 'moreresultbutton'))
+        )
+        driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", more_button)
+        time.sleep(random.uniform(1, 2))  # Random sleep to mimic human behavior
+        
+        more_button.click()
+        print(" - > Clicked 'More Results' button (1st attempt).")
+
+        try:
+            WebDriverWait(driver, 5).until(
+                lambda d: len(d.find_elements(By.TAG_NAME, 'article')) > current_article_count
+            )
+            print(" - > New jobs loaded successfully (after 1st attempt).")
+            time.sleep(random.uniform(1, 2))  # Additional wait to ensure content is
+            return True
+        
+        except TimeoutException:
+            print(" - > No new jobs loaded yet, trying again (2nd attempt)...")
+            driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", more_button)
+            time.sleep(random.uniform(1, 2))  # Random sleep to mimic human behavior
+            more_button.click()
+
+            webdriver_wait = WebDriverWait(driver, 10).until(
+                lambda d: len(d.find_elements(By.TAG_NAME, 'article')) > current_article_count
+            )
+            print(" - > New jobs loaded successfully (after 2nd attempt).")
+            time.sleep(random.uniform(1, 2))  # Additional wait to ensure content is
+            return True
+        
+    except Exception as e:
+        print(" - > No more 'More Results' button found or timeout reached.")
+        return False
+    
 def run_selenium_scraper():
     options = webdriver.ChromeOptions()
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
@@ -111,29 +148,13 @@ def run_selenium_scraper():
             current_article_count = len(all_jobs) 
 
             # Attempt to click the "More Results" button
-            try:
-                more_button = WebDriverWait(driver, 10).until(
-                    EC.element_to_be_clickable((By.ID, 'moreresultbutton'))
-                )
-
-                driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", more_button)
-                time.sleep(random.uniform(1, 2))  # Random sleep to mimic human behavior
-                more_button.click()
-                print(" - > Clicked 'More Results' button")
-
-                print(" - > Waiting for new jobs to load...")
-                WebDriverWait(driver, 15).until(
-                    lambda d: len(d.find_elements(By.TAG_NAME, 'article')) > current_article_count
-                )
-                time.sleep(random.uniform(1, 2))  # Additional wait to ensure content is fully loaded
-
-            except Exception as e:
-                print(" - > No more 'More Results' button found or error occurred:", str(e))
+            if not more_results_button(driver, current_article_count):
                 break
     
     finally:
         print("\nScraping completed. Total unique job found:", len(seen_ids))
         driver.quit()
+
 
 
 if __name__ == "__main__":
