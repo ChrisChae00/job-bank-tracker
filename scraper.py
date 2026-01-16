@@ -15,7 +15,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.common.exceptions import TimeoutException, StaleElementReferenceException
 
 # Configuration
-BASE_URL = "https://www.jobbank.gc.ca/jobsearch/jobsearch?fcid=3001&fcid=3019&fcid=3739&fcid=5395&fcid=15885&fcid=22534&fcid=22887&fcid=25803&fcid=296425&fcid=296531&fcid=297197&fcid=297520&fn21=12010&fn21=20012&fn21=21211&fn21=21223&fn21=21232&term=data&term=software+developer&sort=M&fprov=AB&fprov=BC&fprov=ON&fprov=QC"
+BASE_URL = "https://www.jobbank.gc.ca/jobsearch/jobsearch?fcid=3001&fcid=3019&fcid=3739&fcid=5395&fcid=15885&fcid=22534&fcid=22887&fcid=25803&fcid=296425&fcid=296531&fcid=297197&fcid=297520&fn21=12010&fn21=20012&fn21=21211&fn21=21223&fn21=21232&fprov=AB&fprov=BC&fprov=ON&fprov=QC&page=1&sort=D&term=data&term=software+developer"
 
 def clean_text(text):
     if not text:
@@ -99,16 +99,17 @@ def save_to_csv(job_data_list, filename='job_listings.csv'):
         dict_writer.writerows(job_data_list)
 
 def more_results_button(driver, current_article_count):
-    for attempt in range(1, 4):
+    max_attempts = 5
+    for attempt in range(1, max_attempts + 1):
         try:
-            print(f" - > [{attempt}/3] Attempt. Looking for 'Show more' button...")
+            print(f" - > [{attempt}/{max_attempts}] Attempt. Looking for 'Show more' button...")
             
-            more_button = WebDriverWait(driver, 10).until(
+            more_button = WebDriverWait(driver, 20).until(
                 EC.element_to_be_clickable((By.ID, 'moreresultbutton'))
             )
             
             driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", more_button)
-            time.sleep(1) 
+            time.sleep(1.5) 
 
             try:
                 more_button.click()
@@ -117,25 +118,29 @@ def more_results_button(driver, current_article_count):
             
             print(" - > 'Show more' button clicked. Waiting for new data to load...")
 
-            WebDriverWait(driver, 10).until(
+            WebDriverWait(driver, 30).until(
                 lambda d: len(d.find_elements(By.TAG_NAME, 'article')) > current_article_count
             )
             
             print(f" - > New job listings loaded successfully.")
-            time.sleep(1) 
+            time.sleep(3) 
             return True 
 
         except TimeoutException:
-            print(f" - > [{attempt}/3] Timeout waiting for new job listings. Retrying...")
+            if attempt == 5:
+                print(f" - > [Terminating] {max_attempts} attempts reached without loading new job listings.")
+                break
+
+            print(f" - > [{attempt}/{max_attempts}] Timeout waiting for new job listings. Retrying...")
             time.sleep(2)
             continue 
             
         except Exception as e:
-            print(f" - > [{attempt}/3] Exception occurred: {e}. Retrying...")
+            print(f" - > [{attempt}/{max_attempts}] Exception occurred: {e}. Retrying...")
             time.sleep(2)
             continue
 
-    print(" - > Failed to load new job listings after 3 attempts. Ending scraping.")
+    print(f" - > Failed to load new job listings after {max_attempts} attempts. Ending scraping.")
     return False
     
 def run_selenium_scraper():
@@ -145,33 +150,50 @@ def run_selenium_scraper():
     try:
         print("Starting browser and navigating to Job Bank website...")
         driver.get(BASE_URL)
-        
         time.sleep(5)  # Initial wait for page load
-        seen_ids = load_existing_ids('job_listings.csv')  # To prevent duplicates as the page grows longer
 
-        for i in range(10):  # Adjust the range for more or fewer scrolls
-            print(f"\nProcessing Page/Section {i + 1}...")
+        existing_ids = load_existing_ids('job_listings.csv')
+        current_session_ids = set()
+
+        section_count = 1
+
+        while True:  # Adjust the range for more or fewer scrolls
+            print(f"\n=== Scraping Section {section_count} ===")
 
             html = driver.page_source
             all_jobs = parse_job_listings(html)
-            new_jobs = [job for job in all_jobs if job['id'] not in seen_ids]
-            for job in new_jobs:
-                seen_ids.add(job['id'])
-            
+
+            new_jobs = []
+            stop_scraping = False
+
+            for job in all_jobs:
+                job_id = job['id']
+
+                if job_id in existing_ids:
+                    print(f"Job ID {job_id} already exists in CSV. Stopping further scraping.")
+                    stop_scraping = True
+                    break
+
+                if job_id not in current_session_ids:
+                    new_jobs.append(job)
+                    current_session_ids.add(job_id)
+
             if new_jobs:
                 save_to_csv(new_jobs)
-                print(f" - > Saved {len(new_jobs)} new jobs. (Total: {len(seen_ids)})")
-            else:
-                print(" - > No new jobs found in current section.")
+                print(f" - > {len(new_jobs)} new jobs saved.")
 
-            current_article_count = len(all_jobs) 
+            if stop_scraping:
+                print(" - > Incremental scraping in descending order complete. Exiting loop.")
 
             # Attempt to click the "More Results" button
+            current_article_count = len(all_jobs)
             if not more_results_button(driver, current_article_count):
                 break
+
+            section_count += 1
     
     finally:
-        print("\nScraping completed. Total unique job found:", len(seen_ids))
+        print("\nScraping completed. Total unique job found:", len(current_session_ids))
         driver.quit()
 
 
