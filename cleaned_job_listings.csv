@@ -1,239 +1,256 @@
 ﻿id,title,date_posted,city,province,min_salary,max_salary,salary_period
-article-48007050,software developer,2026-01-09,Calgary,AB,80000.0,120000.0,annually
-article-47873516,software developer,2026-01-05,Toronto,ON,28.75,69.71,hourly
-article-48003639,software developer,2026-01-09,Burnaby,BC,50.8,50.8,hourly
-article-47700309,"developer, software",2025-10-21,North York,ON,87000.0,87000.0,annually
-article-48036235,software developer,2026-01-08,Vancouver,BC,81160.0,101450.0,annually
-article-48117593,software developer,2026-01-08,Vancouver,BC,81160.0,101450.0,annually
-article-47971502,software developer,2026-01-05,Calgary,AB,55.17,69.0,hourly
-article-48125447,senior software developer,2026-01-13,Toronto,ON,28.75,69.71,hourly
-article-48159143,software developer,2026-01-14,Toronto,ON,28.75,69.71,hourly
-article-48138460,software developer,2026-01-13,Oshawa,ON,48.2,48.2,hourly
-article-47971462,software developer,2025-12-23,Toronto,ON,110000.0,130000.0,annually
-article-48117534,software developer,2025-12-23,Toronto,ON,110000.0,130000.0,annually
-article-48005514,software developer,2026-01-09,Calgary,AB,48.5,48.5,hourly
-article-48003021,senior software developer,2026-01-09,Vancouver,BC,28.75,69.71,hourly
-article-47923173,software developer,2026-01-07,Toronto,ON,28.75,69.71,hourly
-article-48129484,software developer,2025-12-08,Miller Lake,ON,50.0,50.0,hourly
-article-47974831,software developer,2026-01-08,Vancouver,BC,60000.0,65000.0,annually
-article-47824391,senior software developer,2026-01-04,Toronto,ON,28.75,69.71,hourly
-article-47739597,software developer,2025-12-29,Calgary,AB,60000.0,80000.0,annually
-article-47986447,software development manager,2026-01-09,Toronto,ON,42.41,96.63,hourly
-article-47703410,software developer,2025-12-29,Etobicoke,ON,48.07,48.07,hourly
-article-47778131,data scientist,2026-01-02,Toronto,ON,124500.0,160800.0,annually
-article-48036144,software developer,2026-01-09,Toronto,ON,75000.0,75000.0,annually
-article-48036170,software developer,2026-01-09,Toronto,ON,90000.0,90000.0,annually
-article-48117336,software developer,2026-01-09,Toronto,ON,75000.0,75000.0,annually
-article-47684637,software developer,2025-12-28,Toronto,ON,28.75,69.71,hourly
-article-47796039,software developer,2026-01-03,Toronto,ON,28.75,69.71,hourly
-article-47413731,software developer,2025-12-19,Toronto,ON,28.75,69.71,hourly
-article-48148647,software developer,2026-01-13,Toronto,ON,140000.0,165000.0,annually
-article-48148809,software developer,2026-01-13,Vancouver,BC,140000.0,165000.0,annually
-article-48148821,software developer,2026-01-13,Montréal,QC,140000.0,165000.0,annually
-article-48148829,software developer,2026-01-13,Calgary,AB,140000.0,165000.0,annually
-article-47600857,data mining analyst,2025-12-26,Toronto,ON,29.74,64.9,hourly
-article-48117331,software developer,2026-01-09,Toronto,ON,90000.0,90000.0,annually
-article-47776206,data mining analyst,2026-01-01,Toronto,ON,29.74,64.9,hourly
-article-47986776,data scientist,2026-01-09,Toronto,ON,29.74,64.9,hourly
-article-47972378,software developer,2026-01-05,Montréal,QC,70.0,100.0,hourly
-article-48117835,software developer,2026-01-05,Montréal,QC,70.0,100.0,hourly
-article-47954988,senior software developer,2026-01-08,Toronto,ON,28.75,69.71,hourly
-article-47413869,software developer,2025-12-20,Toronto,ON,28.75,69.71,hourly
-article-47922500,software developer,2026-01-07,Toronto,ON,28.75,69.71,hourly
-article-47971749,software developer,2026-01-07,Toronto,ON,160000.0,160000.0,annually
-article-47971710,software developer,2026-01-07,Vancouver,BC,160000.0,160000.0,annually
-article-47971975,software developer,2026-01-08,Toronto,ON,80000.0,80000.0,annually
-article-47971746,software developer,2025-12-20,Toronto,ON,90000.0,105000.0,annually
-article-48116891,software developer,2025-12-20,Toronto,ON,90000.0,105000.0,annually
-article-47413691,senior software developer,2025-12-20,Toronto,ON,28.75,69.71,hourly
-article-47415792,data scientist,2025-12-20,Toronto,ON,29.74,64.9,hourly
-article-47415351,data scientist,2025-12-20,Toronto,ON,29.74,64.9,hourly
-article-48019739,senior software developer,2026-01-10,Toronto,ON,28.75,69.71,hourly
-article-48018380,senior software developer,2026-01-09,Toronto,ON,28.75,69.71,hourly
-article-47922224,senior software developer,2026-01-07,Toronto,ON,28.75,69.71,hourly
-article-48116571,software developer,2026-01-11,Toronto,ON,10000.0,10000.0,N/A
-article-47971797,software developer,2025-12-25,Toronto,ON,10000.0,10000.0,N/A
-article-47905322,senior software developer,2026-01-06,Toronto,ON,28.75,69.71,hourly
-article-47839985,data mining analyst,2026-01-04,Toronto,ON,29.74,64.9,hourly
-article-47923728,data processing and systems analysis manager,2026-01-07,Toronto,ON,42.41,96.63,hourly
-article-47414223,software developer,2025-12-20,Toronto,ON,28.75,69.71,hourly
-article-48041094,data architect,2025-12-05,Brampton,ON,44.0,48.0,hourly
-article-47985574,software developer,2026-01-09,Toronto,ON,28.75,69.71,hourly
-article-47686048,data mining analyst,2025-12-28,Toronto,ON,29.74,64.9,hourly
-article-48001697,data scientist,2026-01-09,Toronto,ON,29.74,64.9,hourly
-article-47415281,software developer,2025-12-20,Toronto,ON,28.75,69.71,hourly
-article-47970288,software developer,2026-01-08,Toronto,ON,28.75,69.71,hourly
-article-48002890,data mining analyst,2026-01-09,Toronto,ON,29.74,64.9,hourly
-article-48126404,data mining analyst,2026-01-13,Toronto,ON,29.74,64.9,hourly
-article-47986327,"manager, data processing and systems analysis",2026-01-09,Toronto,ON,42.41,96.63,hourly
-article-47496155,senior software developer,2025-12-22,Kanata,ON,140000.0,170000.0,annually
-article-48142205,data warehouse analyst,2026-01-14,Toronto,ON,25.38,61.54,hourly
-article-48001567,data mining analyst,2026-01-09,Toronto,ON,29.74,64.9,hourly
-article-48148667,software developer,2026-01-13,Vancouver,BC,55.5,55.5,hourly
-article-47926414,data engineer,2026-01-05,Toronto,ON,55.0,56.0,hourly
-article-47987401,data analyst - informatics and systems,2026-01-09,Toronto,ON,25.38,61.54,hourly
-article-47972293,software developer,2026-01-05,Toronto,ON,75.0,88.0,hourly
-article-47415167,software developer,2025-12-20,Toronto,ON,28.75,69.71,hourly
-article-48157648,data mining analyst,2026-01-14,Toronto,ON,29.74,64.9,hourly
-article-47596047,data mining analyst,2025-12-26,Toronto,ON,29.74,64.9,hourly
-article-47971154,software developer,2025-12-16,Toronto,ON,10000.0,10000.0,N/A
-article-47685446,data scientist,2025-12-29,Toronto,ON,29.74,64.9,hourly
-article-48004179,senior software developer,2026-01-09,Kanata,ON,110000.0,140000.0,annually
-article-46014233,data scientist,2025-11-06,Burnaby,BC,43.5,43.5,hourly
-article-47971346,software developer,2025-12-23,Calgary,AB,80.0,100.0,annually
-article-48117162,software developer,2025-12-23,Calgary,AB,80.0,100.0,annually
-article-47720196,data mining analyst,2025-12-30,Toronto,ON,29.74,64.9,hourly
-article-47971844,software developer,2026-01-06,Vancouver,BC,65000.0,120000.0,annually
-article-48117086,software developer,2026-01-06,Vancouver,BC,65000.0,120000.0,annually
-article-45176768,software developer,2025-10-03,Mississauga,ON,53.0,53.0,hourly
-article-45272486,data administrator,2025-10-08,Richmond,BC,45.0,48.0,hourly
-article-47855635,software developer,2026-01-04,Toronto,ON,28.75,69.71,hourly
-article-46119720,software developer,2025-11-10,North Vancouver,BC,48.08,48.08,hourly
-article-46901386,software developer,2025-12-01,Edmonton,AB,41.86,41.86,hourly
-article-47782582,software developer,2025-11-18,Hamilton,ON,43.6,43.6,hourly
-article-46335283,software developer,2025-11-17,Etobicoke,ON,48.08,50.0,hourly
-article-45159460,software developer,2025-10-01,Calgary,AB,41.0,41.0,hourly
-article-47369060,data administrator,2025-12-18,Victoria,BC,42.97,42.97,hourly
-article-47667772,"manager, data processing and systems analysis",2025-12-28,Toronto,ON,42.41,96.63,hourly
-article-48136122,data engineer,2026-01-13,Toronto,ON,100000.0,140000.0,annually
-article-47955103,senior software developer,2026-01-08,Toronto,ON,28.75,69.71,hourly
-article-48117517,software developer,2026-01-11,Toronto,ON,10000.0,10000.0,N/A
-article-48036104,software developer,2026-01-10,Toronto,ON,10000.0,10000.0,N/A
-article-47971811,software developer,2026-01-08,Toronto,ON,10000.0,10000.0,N/A
+article-48249602,"manager, computer applications",2026-01-17,Toronto,ON,42.41,96.63,hourly
+article-48249507,director of technology management,2026-01-17,Toronto,ON,42.41,96.63,hourly
+article-48250276,data mining analyst,2026-01-17,Toronto,ON,29.74,64.9,hourly
+article-48250187,data analyst - informatics and systems,2026-01-17,Toronto,ON,25.38,61.54,hourly
+article-48250475,data processing and systems analysis manager,2026-01-17,Toronto,ON,42.41,96.63,hourly
+article-48250538,senior software developer,2026-01-17,Toronto,ON,28.75,69.71,hourly
+article-48250925,data mining analyst,2026-01-17,Toronto,ON,29.74,64.9,hourly
+article-48250988,director of technology management,2026-01-17,Toronto,ON,42.41,96.63,hourly
+article-48251472,data mining analyst,2026-01-17,Toronto,ON,29.74,64.9,hourly
+article-48251104,software developer,2026-01-17,Toronto,ON,28.75,69.71,hourly
+article-48251235,"director, data processing",2026-01-17,Toronto,ON,42.41,96.63,hourly
+article-48251454,software developer,2026-01-17,Toronto,ON,28.75,69.71,hourly
+article-48251930,data scientist,2026-01-17,Toronto,ON,29.74,64.9,hourly
+article-48251962,"manager, computer applications",2026-01-17,Toronto,ON,42.41,96.63,hourly
+article-48252051,data scientist,2026-01-17,Toronto,ON,29.74,64.9,hourly
+article-48252036,information technology (IT) director,2026-01-17,Toronto,ON,42.41,96.63,hourly
+article-48241352,artificial intelligence (AI) consultant,2026-01-17,Montréal,QC,29.74,64.9,hourly
+article-48236358,"manager, computer systems",2026-01-17,Toronto,ON,42.41,96.63,hourly
+article-48235939,artificial intelligence (AI) consultant,2026-01-17,Toronto,ON,29.74,64.9,hourly
+article-48236435,software developer,2026-01-17,Toronto,ON,28.75,69.71,hourly
+article-48236508,"manager, computer applications",2026-01-17,Toronto,ON,42.41,96.63,hourly
+article-48237111,"manager, computer applications",2026-01-17,Toronto,ON,42.41,96.63,hourly
+article-48237451,"manager, computerized information systems",2026-01-17,Toronto,ON,42.41,96.63,hourly
+article-48233407,"manager, computer applications",2026-01-16,Toronto,ON,42.41,96.63,hourly
+article-48234853,artificial intelligence (AI) consultant,2026-01-16,Toronto,ON,29.74,64.9,hourly
+article-48230695,information technology (IT) implementation manager,2026-01-16,Kelowna,BC,119700.0,119700.0,annually
+article-48231761,director of technology management,2026-01-16,Toronto,ON,40.0,92.0,hourly
+article-48228202,software developer,2026-01-16,Oakville,ON,48.5,48.5,hourly
+article-48224086,office supervisor,2026-01-16,Nanaimo,BC,36.6,36.6,hourly
+article-48223743,data processing specialist,2026-01-16,Toronto,ON,43.96,43.96,hourly
+article-48222726,software developer,2026-01-16,Toronto,ON,28.75,69.71,hourly
+article-48222852,director of technology management,2026-01-16,Toronto,ON,42.41,96.63,hourly
+article-48222629,artificial intelligence (AI) consultant,2026-01-16,Toronto,ON,29.74,64.9,hourly
+article-48222836,"manager, computer applications",2026-01-16,Toronto,ON,42.41,96.63,hourly
+article-48221279,"manager, computer applications",2026-01-16,Toronto,ON,42.41,96.63,hourly
+article-48221166,cloud developer,2026-01-16,Toronto,ON,28.75,69.71,hourly
+article-48222490,"manager, computer applications",2026-01-16,Toronto,ON,42.41,96.63,hourly
+article-48221447,"manager, computer applications",2026-01-16,Toronto,ON,42.41,96.63,hourly
+article-48207827,Internet systems administrator,2026-01-16,Kuujjuaq,QC,52482.0,89256.0,annually
+article-48207757,operations supervisor,2026-01-16,Saguenay,QC,39.0,43.0,hourly
+article-48206314,data scientist,2026-01-16,Vancouver,BC,26.0,78.0,hourly
+article-48206174,"manager, data processing and systems analysis",2026-01-16,Toronto,ON,42.41,96.63,hourly
+article-48206780,data scientist,2026-01-16,Vancouver,BC,26.0,78.0,hourly
+article-48207433,data scientist,2026-01-16,East York,ON,26.0,78.0,hourly
+article-48206378,senior software developer,2026-01-16,East York,ON,25.0,63.0,hourly
+article-48207536,senior software developer,2026-01-16,North York,ON,25.0,63.0,hourly
+article-48205991,senior software developer,2026-01-16,Mississauga,ON,28.75,69.71,hourly
+article-48205312,"manager, IT (information technology) implementation",2026-01-16,Vancouver,BC,40.0,92.0,hourly
+article-48205875,"manager, IT (information technology) implementation",2026-01-16,East York,ON,40.0,92.0,hourly
+article-48157973,software developer,2026-01-14,Toronto,ON,28.75,69.71,hourly
 article-48157886,data mining analyst,2026-01-14,Toronto,ON,29.74,64.9,hourly
-article-47939656,data analyst - informatics and systems,2026-01-07,Toronto,ON,25.38,61.54,hourly
-article-48117138,software developer,2026-01-11,Toronto,ON,10000.0,10000.0,N/A
-article-48118094,software developer,2026-01-11,Toronto,ON,10000.0,10000.0,N/A
-article-47971300,software developer,2026-01-05,Toronto,ON,70.0,75.0,hourly
+article-48156560,"administrator, data",2026-01-14,Montréal,QC,30.27,53.64,hourly
+article-48158341,"manager, computer systems",2026-01-14,Toronto,ON,42.41,96.63,hourly
+article-48157172,"manager, IT (information technology) implementation",2026-01-14,Toronto,ON,42.41,96.63,hourly
+article-48157447,"manager, computer systems",2026-01-14,Toronto,ON,42.41,96.63,hourly
+article-48153295,"manager, IT (information technology) implementation",2026-01-14,London,ON,42.41,96.63,hourly
+article-48141161,data mining analyst,2026-01-14,Toronto,ON,29.74,64.9,hourly
+article-48142205,data warehouse analyst,2026-01-14,Toronto,ON,25.38,61.54,hourly
+article-48175340,data analyst - informatics and systems,2026-01-14,Toronto,ON,25.38,61.54,hourly
+article-48205764,"manager, data processing and systems analysis",2026-01-14,Toronto,ON,40.0,92.0,hourly
+article-48141113,artificial intelligence (AI) consultant,2026-01-14,Toronto,ON,29.74,64.9,hourly
+article-48142529,data scientist,2026-01-13,Toronto,ON,29.74,64.9,hourly
+article-48141553,mobile applications developer,2026-01-13,Toronto,ON,28.75,69.71,hourly
+article-48138460,software developer,2026-01-13,Oshawa,ON,48.2,48.2,hourly
+article-48136122,data engineer,2026-01-13,Toronto,ON,100000.0,140000.0,annually
+article-48134416,records office supervisor,2026-01-13,Edmonton,AB,36.0,36.0,hourly
+article-48134031,records office supervisor,2026-01-13,Edmonton,AB,36.0,36.0,hourly
+article-48129412,office supervisor,2026-01-13,Mississauga,ON,36.1,36.1,hourly
+article-48127981,data engineer,2026-01-13,Richmond Hill,ON,88035.0,97817.0,annually
+article-48128031,cloud developer,2026-01-13,Concord,ON,25.0,25.0,hourly
+article-48127895,cloud developer,2026-01-13,Toronto,ON,48.51,94.97,hourly
+article-48126553,data scientist,2026-01-13,Toronto,ON,29.74,64.9,hourly
+article-48126404,data mining analyst,2026-01-13,Toronto,ON,29.74,64.9,hourly
+article-48125351,artificial intelligence (AI) consultant,2026-01-13,Toronto,ON,29.74,64.9,hourly
+article-48051703,data scientist,2026-01-11,Toronto,ON,29.74,64.9,hourly
+article-48050833,data scientist,2026-01-11,Toronto,ON,29.74,64.9,hourly
+article-48117243,software developer,2026-01-11,Toronto,ON,10000.0,10000.0,N/A
+article-48116571,software developer,2026-01-11,Toronto,ON,10000.0,10000.0,N/A
+article-48116626,software developer,2026-01-11,Toronto,ON,10000.0,10000.0,N/A
 article-48116741,software developer,2026-01-11,Toronto,ON,10000.0,10000.0,N/A
+article-48116818,software developer,2026-01-11,Toronto,ON,10000.0,10000.0,N/A
 article-48117046,software developer,2026-01-11,Mississauga,ON,10000.0,10000.0,N/A
 article-48117106,software developer,2026-01-11,Toronto,ON,10000.0,10000.0,N/A
-article-48036084,software developer,2026-01-09,Montréal,QC,85000.0,125000.0,annually
-article-48036258,software developer,2026-01-09,Windsor,ON,85000.0,125000.0,annually
-article-48036200,software developer,2026-01-09,Chatham,ON,85000.0,125000.0,annually
-article-48036456,software developer,2026-01-09,Toronto,ON,85000.0,125000.0,annually
-article-48116407,software developer,2026-01-09,Toronto,ON,85000.0,125000.0,annually
-article-48116767,software developer,2026-01-09,Windsor,ON,85000.0,125000.0,annually
-article-48117767,software developer,2026-01-09,Montréal,QC,85000.0,125000.0,annually
-article-48117912,software developer,2026-01-09,Chatham,ON,85000.0,125000.0,annually
-article-48036157,software developer,2026-01-08,Mississauga,ON,10000.0,10000.0,N/A
-article-48053221,software developer,2026-01-08,Toronto,ON,10000.0,10000.0,N/A
-article-47971632,software developer,2026-01-06,Toronto,ON,10000.0,10000.0,N/A
-article-48102891,data administrator,2026-01-12,Mississauga,ON,43.96,43.96,hourly
-article-48036118,software developer,2026-01-08,Hearst,ON,36.0,45.0,hourly
-article-48036294,software developer,2026-01-08,Hearst,ON,42.5,42.5,hourly
-article-48116723,software developer,2026-01-08,Hearst,ON,42.5,42.5,hourly
-article-48117234,software developer,2026-01-08,Hearst,ON,36.0,45.0,hourly
-article-47775202,software developer,2026-01-02,Toronto,ON,145000.0,195000.0,annually
-article-48020475,senior software developer,2026-01-10,Toronto,ON,28.75,69.71,hourly
+article-48117138,software developer,2026-01-11,Toronto,ON,10000.0,10000.0,N/A
+article-48117517,software developer,2026-01-11,Toronto,ON,10000.0,10000.0,N/A
 article-48117460,software developer,2026-01-11,Toronto,ON,10000.0,10000.0,N/A
-article-48036434,software developer,2026-01-10,Toronto,ON,10000.0,10000.0,N/A
-article-48000155,software developer,2025-12-18,Fergus,ON,49.0,49.0,hourly
-article-48116818,software developer,2026-01-11,Toronto,ON,10000.0,10000.0,N/A
-article-48116626,software developer,2026-01-11,Toronto,ON,10000.0,10000.0,N/A
-article-47520533,big data analyst,2025-12-23,Dorval,QC,45000.0,45000.0,annually
-article-48089064,software developer,2025-12-26,Mississauga,ON,159507.3,159507.3,annually
-article-48086042,software developer,2025-10-31,Victoria,BC,51.28,51.28,hourly
-article-47775668,"manager, data processing and systems analysis",2025-12-31,Toronto,ON,40.0,92.0,hourly
-article-47972217,software developer,2026-01-04,Toronto,ON,21.8,21.8,hourly
-article-48142529,data scientist,2026-01-13,Toronto,ON,29.74,64.9,hourly
-article-47871200,"developer, software",2026-01-05,Jonquière,QC,54210.0,54210.0,annually
-article-47871206,"developer, software",2026-01-05,Rouyn-Noranda,QC,54210.0,54210.0,annually
-article-47871178,"developer, software",2026-01-05,Laval,QC,54210.0,54210.0,annually
-article-47871227,"developer, software",2026-01-05,Chandler,QC,54210.0,54210.0,annually
-article-47871159,"developer, software",2026-01-05,Shawinigan,QC,54210.0,54210.0,annually
-article-47871252,"developer, software",2026-01-05,Brossard,QC,54210.0,54210.0,annually
+article-48118094,software developer,2026-01-11,Toronto,ON,10000.0,10000.0,N/A
+article-48051278,"manager, IT (information technology) implementation",2026-01-11,Toronto,ON,42.41,96.63,hourly
+article-48050090,"manager, computer applications",2026-01-10,Toronto,ON,42.41,96.63,hourly
+article-48029575,"manager, computer applications",2026-01-10,Toronto,ON,40.0,92.0,hourly
+article-48029272,director of technology management,2026-01-10,Toronto,ON,40.0,92.0,hourly
+article-48029865,"manager, IT (information technology) implementation",2026-01-10,Toronto,ON,40.0,92.0,hourly
+article-48019443,data scientist,2026-01-10,Toronto,ON,29.74,64.9,hourly
+article-48019739,senior software developer,2026-01-10,Toronto,ON,28.75,69.71,hourly
+article-48020475,senior software developer,2026-01-10,Toronto,ON,28.75,69.71,hourly
+article-48020537,"manager, computer applications",2026-01-10,Toronto,ON,42.41,96.63,hourly
+article-48207347,director of technology management,2026-01-10,Mississauga,ON,40.0,92.0,hourly
+article-48018380,senior software developer,2026-01-09,Toronto,ON,28.75,69.71,hourly
+article-48012845,data administrator,2026-01-09,Fort McMurray,AB,23.0,27.0,hourly
 article-47871279,"developer, software",2026-01-05,Gatineau,QC,54210.0,54210.0,annually
 article-47871286,"developer, software",2026-01-05,Lévis,QC,54210.0,54210.0,annually
 article-47871288,"developer, software",2026-01-05,Sept-Îles,QC,54210.0,54210.0,annually
-article-47745534,cloud developer,2025-12-30,Windsor,ON,32.0,32.0,hourly
-article-47652547,"architect, database",2025-12-28,Toronto,ON,25.38,61.54,hourly
-article-47936923,director of technology management,2026-01-07,Toronto,ON,42.41,96.63,hourly
-article-48002692,director of technology management,2026-01-09,Toronto,ON,42.41,96.63,hourly
-article-48079990,"manager, computer applications",2026-01-12,Toronto,ON,42.41,96.63,hourly
-article-47476907,data scientist,2025-12-19,Toronto,ON,26.0,78.0,hourly
-article-47939268,artificial intelligence (AI) analyst,2026-01-07,Toronto,ON,29.74,64.9,hourly
-article-47990090,cloud developer,2026-01-08,Edmonton,AB,46373.38,89785.66,annually
-article-48002808,"manager, IT (information technology) implementation",2026-01-09,Toronto,ON,42.41,96.63,hourly
-article-47305279,"developer, software",2025-12-16,Blainville,QC,55000.0,55000.0,annually
-article-47322020,"developer, software",2025-12-16,Trois-Rivières,QC,54210.0,54210.0,annually
-article-47910755,cloud developer,2026-01-06,Waterloo,ON,100000.0,100000.0,annually
-article-48157713,artificial intelligence (AI) consultant,2026-01-14,Toronto,ON,29.74,64.9,hourly
-article-47335170,cloud developer,2025-12-17,Brampton,ON,70000.0,115000.0,annually
-article-48141553,mobile applications developer,2026-01-13,Toronto,ON,28.75,69.71,hourly
-article-45715889,business systems manager,2025-10-29,Thunder Bay,ON,68.0,68.0,hourly
-article-47415172,data warehouse analyst,2025-12-20,Toronto,ON,25.38,61.54,hourly
-article-48052951,artificial intelligence (ai) programmer,2026-01-11,Toronto,ON,28.75,69.71,hourly
-article-47840957,director of technology management,2026-01-04,Toronto,ON,42.41,96.63,hourly
-article-48052748,director of technology management,2026-01-08,Toronto,ON,40.0,92.0,hourly
-article-48156560,"administrator, data",2026-01-14,Montréal,QC,30.27,53.64,hourly
-article-48052672,cloud developer,2026-01-11,Toronto,ON,28.75,69.71,hourly
-article-48050090,"manager, computer applications",2026-01-10,Toronto,ON,42.41,96.63,hourly
-article-46874463,database analyst,2025-12-01,Nepean,ON,150000.0,170000.0,annually
-article-48052161,"manager, IT (information technology) implementation",2026-01-11,Toronto,ON,42.41,96.63,hourly
-article-46519699,interactive media developer,2025-11-21,Toronto,ON,48.08,48.08,hourly
-article-47784517,database analyst,2026-01-02,Mississauga,ON,44.0,46.0,hourly
-article-48072485,mobile applications developer,2025-12-30,Toronto,ON,25.0,63.0,hourly
-article-48125351,artificial intelligence (AI) consultant,2026-01-13,Toronto,ON,29.74,64.9,hourly
-article-46936086,database manager,2025-12-03,Oshawa,ON,45.0,45.0,hourly
-article-47367951,data entry supervisor,2025-12-18,Brampton,ON,36.0,36.0,hourly
-article-45706388,information technology (IT) implementation manager,2025-10-29,Toronto,ON,5415.2,5415.2,N/A
-article-47539559,database analyst,2025-12-24,Scarborough,ON,45.0,45.0,hourly
-article-48159599,information technology (IT) director,2026-01-14,Toronto,ON,42.41,96.63,hourly
-article-45486423,business data analyst,2025-10-21,Toronto,ON,19.0,19.0,hourly
-article-48127202,artificial intelligence (AI) consultant,2026-01-13,Toronto,ON,29.74,64.9,hourly
-article-48003321,"manager, computer applications",2026-01-09,Toronto,ON,42.41,96.63,hourly
-article-47985033,technical program manager - information technology (IT),2026-01-08,Ottawa,ON,66.7,66.7,hourly
-article-48126454,artificial intelligence (AI) consultant,2026-01-13,Toronto,ON,29.74,64.9,hourly
-article-48126634,artificial intelligence (AI) consultant,2026-01-13,Toronto,ON,29.74,64.9,hourly
-article-48127327,"manager, computer applications",2026-01-13,Toronto,ON,42.41,96.63,hourly
-article-47519069,database analyst,2025-12-23,Pickering,ON,44.5,44.5,hourly
-article-48097261,"manager, computer applications",2026-01-12,Toronto,ON,42.41,96.63,hourly
-article-47876940,director of technology,2026-01-05,Georgetown,ON,150000.0,150000.0,annually
-article-46525150,database analyst,2025-11-21,Markham,ON,42.75,46.75,hourly
-article-48158267,artificial intelligence (AI) consultant,2026-01-14,Toronto,ON,29.74,64.9,hourly
-article-47711362,application programmer,2025-12-29,Calgary,AB,35.0,52.0,hourly
-article-48113531,director of technology management,2026-01-10,Mississauga,ON,40.0,92.0,hourly
-article-47521386,data entry supervisor,2025-12-23,Québec,QC,20.0,20.0,hourly
-article-48008738,computer manager,2026-01-09,Vancouver,BC,200000.0,253650.0,annually
-article-48134778,database analyst (DBA),2025-10-17,Brampton,ON,45.0,45.0,hourly
-article-47686010,mobile applications developer,2025-12-28,Toronto,ON,28.75,69.71,hourly
-article-48081281,cloud developer,2026-01-12,North York,ON,66656.81,104957.97,annually
-article-45421175,data entry clerks supervisor,2025-10-17,Scarborough,ON,36.0,36.0,hourly
-article-47684745,artificial intelligence (AI) analyst,2025-12-29,Toronto,ON,29.74,64.9,hourly
-article-47907611,cloud developer,2026-01-06,Toronto,ON,50.0,70.0,hourly
-article-46003962,data entry supervisor,2025-11-06,Concord,ON,36.0,36.0,hourly
-article-47415860,"manager, computer applications",2025-12-20,Toronto,ON,42.41,96.63,hourly
-article-48158341,"manager, computer systems",2026-01-14,Toronto,ON,42.41,96.63,hourly
-article-47496156,application programmer,2025-12-22,Kanata,ON,120000.0,150000.0,annually
-article-48127895,cloud developer,2026-01-13,Toronto,ON,48.51,94.97,hourly
-article-47413941,"manager, computer applications",2025-12-20,Toronto,ON,42.41,96.63,hourly
-article-47110475,"analyst, database",2025-12-08,Toronto,ON,92497.6,92497.6,annually
-article-47652028,artificial intelligence (AI) consultant,2025-12-28,Toronto,ON,29.74,64.9,hourly
-article-48141113,artificial intelligence (AI) consultant,2026-01-14,Toronto,ON,29.74,64.9,hourly
-article-47840574,"manager, computer applications",2026-01-04,Toronto,ON,42.41,96.63,hourly
-article-47414426,"manager, computer applications",2025-12-20,Toronto,ON,42.41,96.63,hourly
-article-47986458,"manager, IT (information technology) implementation",2026-01-09,Toronto,ON,42.41,96.63,hourly
-article-47651763,"manager, computer applications",2025-12-26,Toronto,ON,40.0,92.0,hourly
-article-47985995,"manager, IT (information technology) implementation",2026-01-09,Toronto,ON,42.41,96.63,hourly
-article-47312601,test engineering manager - software,2025-12-16,Mississauga,ON,67.31,67.31,hourly
-article-47573845,"manager, computer applications",2025-12-25,Toronto,ON,42.41,96.63,hourly
-article-47923323,"manager, computer applications",2026-01-07,Toronto,ON,42.41,96.63,hourly
-article-47324292,Internet systems administrator,2025-12-17,Kuujjuaq,QC,52482.0,89256.0,annually
-article-48051278,"manager, IT (information technology) implementation",2026-01-11,Toronto,ON,42.41,96.63,hourly
-article-47921991,"manager, computer applications",2026-01-07,Toronto,ON,42.41,96.63,hourly
-article-47954629,"manager, computer applications",2026-01-07,Toronto,ON,42.41,96.63,hourly
+article-47867659,operations supervisor,2026-01-05,Terrebonne,QC,80000.0,110000.0,annually
+article-47855572,software developer,2026-01-05,Toronto,ON,28.75,69.71,hourly
+article-47856784,data scientist,2026-01-05,Toronto,ON,29.74,64.9,hourly
+article-48116333,big data analyst,2026-01-05,Toronto,ON,70000.0,85000.0,annually
+article-48117835,software developer,2026-01-05,Montréal,QC,70.0,100.0,hourly
+article-47856664,software developer,2026-01-05,Toronto,ON,28.75,69.71,hourly
+article-47926448,software developer,2026-01-05,Dundas,ON,64000.0,75000.0,annually
+article-47926414,data engineer,2026-01-05,Toronto,ON,55.0,56.0,hourly
+article-47839985,data mining analyst,2026-01-04,Toronto,ON,29.74,64.9,hourly
+article-47824391,senior software developer,2026-01-04,Toronto,ON,28.75,69.71,hourly
+article-47855635,software developer,2026-01-04,Toronto,ON,28.75,69.71,hourly
+article-47826617,database analyst,2026-01-04,Toronto,ON,25.38,61.54,hourly
+article-47855496,software quality assurance director,2026-01-04,Toronto,ON,42.41,96.63,hourly
+article-47810415,"manager, computer applications",2026-01-03,Toronto,ON,42.41,96.63,hourly
+article-47805921,director of technology management,2026-01-03,Toronto,ON,40.0,92.0,hourly
+article-47803717,software developer,2026-01-03,Toronto,ON,28.75,69.71,hourly
+article-47801589,software developer,2026-01-03,Toronto,ON,28.75,69.71,hourly
+article-47796039,software developer,2026-01-03,Toronto,ON,28.75,69.71,hourly
 article-47784856,operations supervisor,2026-01-02,Kitchener,ON,50000.0,65000.0,annually
-article-47876139,application programmer,2026-01-05,Surrey,BC,62.0,62.0,hourly
-article-47413834,Java programmer,2025-12-20,Toronto,ON,28.75,69.71,hourly
-article-47883604,computer department coordinator,2026-01-05,Montréal,QC,80000.0,100000.0,annually
-article-48153295,"manager, IT (information technology) implementation",2026-01-14,London,ON,42.41,96.63,hourly
-article-47488754,office supervisor,2025-11-21,Vancouver,BC,38.0,38.0,hourly
-article-48002448,"manager, IT (information technology) implementation",2026-01-09,Toronto,ON,42.41,96.63,hourly
-article-47985656,office supervisor,2026-01-09,Toronto,ON,20.67,45.0,hourly
-article-47529894,technical program manager - information technology (IT),2025-12-24,Nepean,ON,165000.0,185000.0,annually
+article-47784517,database analyst,2026-01-02,Mississauga,ON,44.0,46.0,hourly
+article-47778131,data scientist,2026-01-02,Toronto,ON,124500.0,160800.0,annually
+article-47775202,software developer,2026-01-02,Toronto,ON,145000.0,195000.0,annually
+article-47703410,software developer,2025-12-29,Etobicoke,ON,48.07,48.07,hourly
+article-47685446,data scientist,2025-12-29,Toronto,ON,29.74,64.9,hourly
+article-47739597,software developer,2025-12-29,Calgary,AB,60000.0,80000.0,annually
+article-47686237,data mining analyst,2025-12-29,Toronto,ON,29.74,64.9,hourly
+article-47686336,data analyst - informatics and systems,2025-12-29,Toronto,ON,25.38,61.54,hourly
+article-47684745,artificial intelligence (AI) analyst,2025-12-29,Toronto,ON,29.74,64.9,hourly
+article-47684637,software developer,2025-12-28,Toronto,ON,28.75,69.71,hourly
+article-47682868,data analyst - informatics and systems,2025-12-28,Toronto,ON,25.38,61.54,hourly
+article-47686048,data mining analyst,2025-12-28,Toronto,ON,29.74,64.9,hourly
+article-47652547,"architect, database",2025-12-28,Toronto,ON,25.38,61.54,hourly
+article-47652028,artificial intelligence (AI) consultant,2025-12-28,Toronto,ON,29.74,64.9,hourly
+article-47686010,mobile applications developer,2025-12-28,Toronto,ON,28.75,69.71,hourly
+article-47651564,software developer,2025-12-27,Toronto,ON,28.75,69.71,hourly
+article-47602211,software developer,2025-12-26,Toronto,ON,28.75,69.71,hourly
+article-47600857,data mining analyst,2025-12-26,Toronto,ON,29.74,64.9,hourly
+article-47596047,data mining analyst,2025-12-26,Toronto,ON,29.74,64.9,hourly
+article-47651763,"manager, computer applications",2025-12-26,Toronto,ON,40.0,92.0,hourly
+article-47576624,"manager, data processing and systems analysis",2025-12-25,Toronto,ON,42.41,96.63,hourly
+article-47576066,"manager, IT (information technology) implementation",2025-12-25,Mississauga,ON,42.41,96.63,hourly
+article-47573845,"manager, computer applications",2025-12-25,Toronto,ON,42.41,96.63,hourly
+article-47616571,artificial intelligence (AI) consultant,2025-12-25,Toronto,ON,26.0,78.0,hourly
+article-47549811,"manager, computer applications",2025-12-25,Toronto,ON,42.41,96.63,hourly
 article-47615945,information technology (IT) director,2025-12-25,Toronto,ON,40.0,92.0,hourly
-article-47922415,information technology (IT) director,2026-01-07,Toronto,ON,42.41,96.63,hourly
-article-45907765,computerized information systems manager,2025-11-04,Richmond,BC,72.12,72.12,hourly
+article-47539559,database analyst,2025-12-24,Scarborough,ON,45.0,45.0,hourly
+article-47532786,office supervisor,2025-12-24,Nisku,AB,36.5,36.5,hourly
+article-47529894,technical program manager - information technology (IT),2025-12-24,Nepean,ON,165000.0,185000.0,annually
+article-47651980,director of technology management,2025-12-24,Toronto,ON,40.0,92.0,hourly
+article-47525366,office supervisor,2025-12-23,Québec,QC,29.0,31.0,hourly
+article-47523612,data analyst - informatics and systems,2025-12-23,Toronto,ON,25.38,61.54,hourly
+article-47521386,data entry supervisor,2025-12-23,Québec,QC,20.0,20.0,hourly
+article-47520533,big data analyst,2025-12-23,Dorval,QC,45000.0,45000.0,annually
+article-47519069,database analyst,2025-12-23,Pickering,ON,44.5,44.5,hourly
+article-48117534,software developer,2025-12-23,Toronto,ON,110000.0,130000.0,annually
+article-48117162,software developer,2025-12-23,Calgary,AB,80.0,100.0,annually
+article-48116596,software developer,2025-12-23,Squamish,BC,95000.0,125000.0,annually
+article-48118048,data scientist,2025-12-23,Vancouver,BC,70000.0,90000.0,annually
+article-48117869,software developer,2025-12-23,Boisbriand,QC,85000.0,95000.0,annually
+article-47498643,software developer,2025-12-22,Vancouver,BC,88000.0,100000.0,annually
+article-47496194,office supervisor,2025-12-22,Rocky View,AB,36.0,36.0,hourly
+article-47496155,senior software developer,2025-12-22,Kanata,ON,140000.0,170000.0,annually
+article-47496156,application programmer,2025-12-22,Kanata,ON,120000.0,150000.0,annually
+article-47495078,software developer,2025-12-22,Kanata,ON,120000.0,150000.0,annually
+article-47454247,data analyst - informatics and systems,2025-12-21,Burlington,ON,25.38,61.54,hourly
+article-47445171,computer projects manager,2025-12-21,Saint-Georges,QC,35.0,45.0,hourly
+article-47476724,"manager, computer applications",2025-12-21,Gloucester,ON,40.0,92.0,hourly
+article-47476832,"manager, IT (information technology) implementation",2025-12-21,Gloucester,ON,40.0,92.0,hourly
+article-47415860,"manager, computer applications",2025-12-20,Toronto,ON,42.41,96.63,hourly
+article-47413869,software developer,2025-12-20,Toronto,ON,28.75,69.71,hourly
+article-47413691,senior software developer,2025-12-20,Toronto,ON,28.75,69.71,hourly
+article-47415351,data scientist,2025-12-20,Toronto,ON,29.74,64.9,hourly
+article-48117830,software developer,2025-12-20,Toronto,ON,90000.0,90000.0,annually
+article-48116891,software developer,2025-12-20,Toronto,ON,90000.0,105000.0,annually
+article-47414223,software developer,2025-12-20,Toronto,ON,28.75,69.71,hourly
+article-47415281,software developer,2025-12-20,Toronto,ON,28.75,69.71,hourly
+article-47415167,software developer,2025-12-20,Toronto,ON,28.75,69.71,hourly
+article-47415172,data warehouse analyst,2025-12-20,Toronto,ON,25.38,61.54,hourly
+article-47413941,"manager, computer applications",2025-12-20,Toronto,ON,42.41,96.63,hourly
+article-47414254,"manager, IT (information technology) implementation",2025-12-20,Toronto,ON,42.41,96.63,hourly
+article-47414408,"manager, computer applications",2025-12-20,Toronto,ON,42.41,96.63,hourly
+article-47414426,"manager, computer applications",2025-12-20,Toronto,ON,42.41,96.63,hourly
+article-47413806,director of technology management,2025-12-20,Toronto,ON,42.41,96.63,hourly
+article-47413834,Java programmer,2025-12-20,Toronto,ON,28.75,69.71,hourly
+article-47414107,"manager, computer applications",2025-12-20,Toronto,ON,42.41,96.63,hourly
+article-47414855,Java programmer,2025-12-20,Toronto,ON,28.75,69.71,hourly
+article-47825768,"manager, computer applications",2025-12-20,Montréal,QC,42.41,96.63,hourly
+article-47413731,software developer,2025-12-19,Toronto,ON,28.75,69.71,hourly
+article-47414363,data mining analyst,2025-12-19,Toronto,ON,29.74,64.9,hourly
+article-47475461,data scientist,2025-12-19,Toronto,ON,26.0,78.0,hourly
+article-47476907,data scientist,2025-12-19,Toronto,ON,26.0,78.0,hourly
+article-47370454,business data analyst,2025-12-18,Toronto,ON,83560.0,97486.0,annually
+article-47369066,information technology (IT) director,2025-12-18,Burnaby,BC,180523.0,180523.0,annually
+article-47368688,data scientist,2025-12-18,Brampton,ON,48.38,48.38,hourly
+article-48000155,software developer,2025-12-18,Fergus,ON,49.0,49.0,hourly
+article-47367951,data entry supervisor,2025-12-18,Brampton,ON,36.0,36.0,hourly
+article-47972582,operations supervisor,2025-12-17,Pitt Meadows,BC,47000.0,50000.0,annually
+article-47340343,office supervisor,2025-12-17,Surrey,BC,31.0,31.0,hourly
+article-48123537,data administrator,2025-12-15,Milton,ON,47.0,47.0,hourly
+article-47778561,office supervisor,2025-12-11,Montréal,QC,35.0,35.0,hourly
+article-47181544,"manager, computer systems",2025-12-11,Abbotsford,BC,60.44,60.44,hourly
+article-47171743,office supervisor,2025-12-10,Brampton,ON,34.5,37.0,hourly
+article-47975798,data scientist,2025-12-10,Toronto,ON,11250.0,11250.0,N/A
+article-47769637,business process manager,2025-12-09,Nepean,ON,160000.0,180000.0,annually
+article-47110475,"analyst, database",2025-12-08,Toronto,ON,92497.6,92497.6,annually
+article-48129484,software developer,2025-12-08,Miller Lake,ON,50.0,50.0,hourly
+article-48041094,data architect,2025-12-05,Brampton,ON,44.0,48.0,hourly
+article-46936086,database manager,2025-12-03,Oshawa,ON,45.0,45.0,hourly
+article-46901386,software developer,2025-12-01,Edmonton,AB,41.86,41.86,hourly
+article-48192084,database analyst,2025-12-01,Nepean,ON,150000.0,170000.0,annually
+article-46760488,office supervisor,2025-11-27,Brampton,ON,36.5,36.5,hourly
+article-46676426,data engineer,2025-11-25,Mississauga,ON,51.0,51.0,hourly
+article-46676396,software developer,2025-11-25,Mississauga,ON,50.0,50.0,hourly
+article-46634864,administrative supervisor,2025-11-24,Mississauga,ON,37.0,37.0,hourly
+article-46525150,database analyst,2025-11-21,Markham,ON,42.75,46.75,hourly
+article-46519699,interactive media developer,2025-11-21,Picton,ON,48.08,48.08,hourly
+article-48189575,office supervisor,2025-11-21,Vancouver,BC,38.0,38.0,hourly
+article-47933645,operations supervisor,2025-11-21,Québec,QC,55000.0,57000.0,annually
+article-48222058,software developer,2025-11-18,Hamilton,ON,43.6,43.6,hourly
+article-46371163,information systems manager,2025-11-18,Pickering,ON,68.0,68.0,hourly
+article-46335283,software developer,2025-11-17,Etobicoke,ON,48.08,50.0,hourly
+article-48158513,office supervisor,2025-11-14,Richmond,BC,38.0,38.0,hourly
 article-46237330,Java programmer,2025-11-14,Toronto,ON,67.31,67.31,hourly
-article-47923665,"manager, computer applications",2026-01-07,Toronto,ON,42.41,96.63,hourly
+article-48225032,operations supervisor,2025-11-11,Brampton,ON,36.1,36.1,hourly
+article-46119720,software developer,2025-11-10,North Vancouver,BC,48.08,48.08,hourly
+article-46043814,administrative supervisor,2025-11-07,Burnaby,BC,36.6,36.6,hourly
+article-46014233,data scientist,2025-11-06,Burnaby,BC,43.5,43.5,hourly
+article-46003962,data entry supervisor,2025-11-06,Concord,ON,36.0,36.0,hourly
+article-45992116,office supervisor,2025-11-06,Brampton,ON,36.0,40.0,hourly
+article-45912246,office supervisor,2025-11-04,Mississauga,ON,30.0,36.0,hourly
+article-45907765,computerized information systems manager,2025-11-04,Richmond,BC,72.12,72.12,hourly
+article-45873272,"developer, software",2025-11-03,Toronto,ON,85000.0,98000.0,annually
+article-47776831,"developer, software",2025-11-03,Toronto,ON,85000.0,98000.0,annually
+article-48086042,software developer,2025-10-31,Victoria,BC,51.28,51.28,hourly
+article-45740802,computer application programmer,2025-10-30,Toronto,ON,48.08,48.08,hourly
+article-46855628,operations supervisor,2025-10-30,Laval,QC,35.0,35.0,hourly
+article-45715889,business systems manager,2025-10-29,Thunder Bay,ON,68.0,68.0,hourly
+article-45706388,information technology (IT) implementation manager,2025-10-29,Toronto,ON,5415.2,5415.2,N/A
+article-45603384,office clerks supervisor,2025-10-25,Edmonton,AB,36.0,36.0,hourly
+article-45544659,operations supervisor,2025-10-23,Acton,ON,36.0,36.0,hourly
+article-45540693,systems manager - computer systems,2025-10-23,Etobicoke,ON,4080.0,4080.0,N/A
+article-45486627,office supervisor,2025-10-21,Calgary,AB,36.0,36.0,hourly
+article-45486423,business data analyst,2025-10-21,Toronto,ON,19.0,19.0,hourly
+article-47700309,"developer, software",2025-10-21,North York,ON,87000.0,87000.0,annually
+article-45466853,administrative supervisor,2025-10-20,Edmonton,AB,36.0,36.0,hourly
+article-47272020,operations supervisor,2025-10-18,Various locations,,36.0,36.0,hourly
+article-48134778,database analyst (DBA),2025-10-17,Brampton,ON,45.0,45.0,hourly
+article-45421175,data entry clerks supervisor,2025-10-17,Scarborough,ON,36.0,36.0,hourly
+article-45272486,data administrator,2025-10-08,Richmond,BC,45.0,48.0,hourly
+article-45176768,software developer,2025-10-03,Mississauga,ON,53.0,53.0,hourly
+article-45159460,software developer,2025-10-01,Calgary,AB,41.0,41.0,hourly
+article-48094183,data engineer,2025-09-26,Toronto,ON,49.0,49.0,hourly
+article-45055636,administrative supervisor,2025-09-19,Toronto,ON,75000.0,75000.0,annually
