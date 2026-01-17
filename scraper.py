@@ -157,6 +157,9 @@ def run_selenium_scraper():
 
         section_count = 1
 
+        MAX_CONSECUTIVE_DUPLICATE = 5
+        duplicate_streak = 0
+
         while True:  # Adjust the range for more or fewer scrolls
             print(f"\n=== Scraping Section {section_count} ===")
 
@@ -170,20 +173,28 @@ def run_selenium_scraper():
                 job_id = job['id']
 
                 if job_id in existing_ids:
-                    print(f"Job ID {job_id} already exists in CSV. Stopping further scraping.")
-                    stop_scraping = True
-                    break
+                    duplicate_streak += 1
+                    print(f" - > Duplicate job found (ID: {job_id}). Consecutive duplicates: {duplicate_streak}")
+                    if duplicate_streak >= MAX_CONSECUTIVE_DUPLICATE:
+                        print(" - > Maximum consecutive duplicates reached. Stopping incremental scraping.")
+                        stop_scraping = True
+                        break
 
-                if job_id not in current_session_ids:
-                    new_jobs.append(job)
-                    current_session_ids.add(job_id)
+                else:
+                    if duplicate_streak > 0:
+                        print(f" - > New job found (ID: {job_id}). Resetting duplicate streak.")
+                        duplicate_streak = 0
+
+                    if job_id not in current_session_ids:
+                        new_jobs.append(job)
+                        current_session_ids.add(job_id)
 
             if new_jobs:
                 save_to_csv(new_jobs)
                 print(f" - > {len(new_jobs)} new jobs saved.")
 
             if stop_scraping:
-                print(" - > Incremental scraping in descending order complete. Exiting loop.")
+                break
 
             # Attempt to click the "More Results" button
             current_article_count = len(all_jobs)
@@ -193,7 +204,7 @@ def run_selenium_scraper():
             section_count += 1
     
     finally:
-        print("\nScraping completed. Total unique job found:", len(current_session_ids))
+        print("\nIncremental scraping in descending order completed.\nTotal unique job found:", len(current_session_ids))
         driver.quit()
 
 
