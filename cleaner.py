@@ -69,7 +69,7 @@ def clean_data(input_file, output_file):
     df_cleaned.to_csv(output_file, index=False, encoding='utf-8-sig')
     print(f"Cleaned data saved to {output_file} with {len(df_cleaned)} records.")
 
-# if __name__ == "__main__":
-#     input_file = 'job_listings.csv'
-#     output_file = 'cleaned_job_listings.csv'
-#     clean_data(input_file, output_file)
+if __name__ == "__main__":
+    input_file = 'job_listings.csv'
+    output_file = 'cleaned_job_listings.csv'
+    clean_data(input_file, output_file)
