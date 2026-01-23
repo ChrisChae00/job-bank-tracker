@@ -4,5 +4,7 @@ from cleaner import clean_data
 
 
 if __name__ == "__main__":
-    run_selenium_scraper()
-    clean_data('job_listings.csv', 'cleaned_job_listings.csv')
+    job_listings_file = 'job_listings.csv'
+    cleaned_file = 'cleaned_job_listings.csv'
+    run_selenium_scraper(job_listings_file)
+    clean_data(job_listings_file, cleaned_file)

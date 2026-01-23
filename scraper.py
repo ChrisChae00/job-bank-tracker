@@ -15,7 +15,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.common.exceptions import TimeoutException, StaleElementReferenceException
 
 # Configuration
-BASE_URL = "https://www.jobbank.gc.ca/jobsearch/jobsearch?fcid=3001&fcid=3019&fcid=3739&fcid=5395&fcid=15885&fcid=22534&fcid=22887&fcid=25803&fcid=296425&fcid=296531&fcid=297197&fcid=297520&fn21=12010&fn21=20012&fn21=21211&fn21=21223&fn21=21232&fprov=AB&fprov=BC&fprov=ON&fprov=QC&page=1&sort=D&term=data&term=software+developer"
+BASE_URL = "https://www.jobbank.gc.ca/jobsearch/jobsearch?fcid=3001&fcid=3019&fcid=3739&fcid=5395&fcid=15885&fcid=22534&fcid=22887&fcid=25803&fcid=296425&fcid=296531&fcid=297197&fcid=297520&fn21=12010&fn21=20012&fn21=21211&fn21=21223&fn21=21232&fprov=AB&fprov=BC&fprov=ON&fprov=QC&page=1&sort=D&term=data&term=software+developer&term=data+engineer"
 
 def clean_text(text):
     if not text:
@@ -77,17 +77,17 @@ def load_existing_ids(filename):
     return existing_ids
 
 
-def save_to_csv(job_data_list, filename='job_listings.csv'):
+def save_to_csv(job_data_list, filename):
     if not job_data_list:
         print("No job data to save.")
         return
     
-    keys = job_data_list[0].keys()
+    fieldnames = job_data_list[0].keys()
     file_exists = os.path.isfile(filename)
 
     # Use 'a' (append) mode
     with open(filename, 'a', newline='', encoding='utf-8-sig') as output_file:
-        dict_writer = csv.DictWriter(output_file, fieldnames=keys)
+        dict_writer = csv.DictWriter(output_file, fieldnames=fieldnames)
         
         # Write header only if file is new
         if not file_exists:
@@ -142,8 +142,8 @@ def more_results_button(driver, current_article_count):
 
     print(f" - > Failed to load new job listings after {max_attempts} attempts. Ending scraping.")
     return False
-    
-def run_selenium_scraper():
+
+def run_selenium_scraper(file_path):
     options = webdriver.ChromeOptions()
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
@@ -152,7 +152,7 @@ def run_selenium_scraper():
         driver.get(BASE_URL)
         time.sleep(5)  # Initial wait for page load
 
-        existing_ids = load_existing_ids('job_listings.csv')
+        existing_ids = load_existing_ids(file_path)
         current_session_ids = set()
 
         section_count = 1
@@ -190,7 +190,7 @@ def run_selenium_scraper():
                         current_session_ids.add(job_id)
 
             if new_jobs:
-                save_to_csv(new_jobs)
+                save_to_csv(new_jobs, file_path)
                 print(f" - > {len(new_jobs)} new jobs saved.")
 
             if stop_scraping:
@@ -210,4 +210,5 @@ def run_selenium_scraper():
 
 
 if __name__ == "__main__":
-    run_selenium_scraper()
+    filename = 'job_listings.csv'
+    run_selenium_scraper(filename)
