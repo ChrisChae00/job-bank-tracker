@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 import re
+from contants import JOB_LISTINGS_CSV, CLEANED_JOB_LISTINGS_CSV
 
 def clean_data(input_file, output_file):
     if not os.path.exists(input_file):
@@ -70,6 +71,4 @@ def clean_data(input_file, output_file):
     print(f"Cleaned data saved to {output_file} with {len(df_cleaned)} records.")
 
 if __name__ == "__main__":
-    input_file = 'job_listings.csv'
-    output_file = 'cleaned_job_listings.csv'
-    clean_data(input_file, output_file)
+    clean_data(JOB_LISTINGS_CSV, CLEANED_JOB_LISTINGS_CSV)

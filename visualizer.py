@@ -1,9 +1,10 @@
 print("=== Generating visualizations ===")
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates # for date formatting
 import seaborn as sns
 import os
-
+from contants import CLEANED_JOB_LISTINGS_CSV, VISUALIZATION_IMAGE
 
 def generate_visuals(input_file):
     print("=== Starting visualizations ===", flush=True)
@@ -46,15 +47,18 @@ def generate_visuals(input_file):
 
     # Plot 3: Job postings over Time
     df['date_posted'] = pd.to_datetime(df['date_posted'], errors='coerce')
-    date_counts = df['date_posted'].value_counts().sort_index()
+    monthly_counts = df.resample('MS', on='date_posted').size()
+
     sns.lineplot(
-        x=date_counts.index,
-        y=date_counts.values,
+        x=monthly_counts.index,
+        y=monthly_counts.values,
         ax=axes[1 , 0],
         marker="o",
         color="teal"
     )
     axes[1, 0].set_title("Job Postings Over Time", fontsize=16, pad=15)
+    axes[1, 0].xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m'))
+    axes[1, 0].tick_params(axis='x', rotation=45)
     axes[1, 0].set_xlabel("Date Posted", fontsize=14)
     axes[1, 0].set_ylabel("Number of Job Listings", fontsize=14)   
 
@@ -71,12 +75,10 @@ def generate_visuals(input_file):
 
     # optimize layout and saving
     plt.tight_layout()
-    output_image = "job_market_analysis.png"
-    plt.savefig(output_image, dpi=300)
+    plt.savefig(VISUALIZATION_IMAGE, dpi=300)
 
-    print(f"Visualizations saved to {output_image}.", flush=True)
-    plt.show()
+    print(f"Visualizations saved to {VISUALIZATION_IMAGE}.", flush=True)
+    # plt.show()
 
 if __name__ == "__main__":
-    input_file = 'cleaned_job_listings.csv'
-    generate_visuals(input_file)
+    generate_visuals(CLEANED_JOB_LISTINGS_CSV)

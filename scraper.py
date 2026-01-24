@@ -4,6 +4,7 @@ import csv
 import time
 import random
 from bs4 import BeautifulSoup
+from contants import JOB_LISTINGS_CSV
 
 # Selenium Imports
 from selenium import webdriver
@@ -210,5 +211,4 @@ def run_selenium_scraper(file_path):
 
 
 if __name__ == "__main__":
-    filename = 'job_listings.csv'
-    run_selenium_scraper(filename)
+    run_selenium_scraper(JOB_LISTINGS_CSV)

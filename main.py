@@ -1,10 +1,9 @@
 
 from scraper import run_selenium_scraper
 from cleaner import clean_data
+from contants import JOB_LISTINGS_CSV, CLEANED_JOB_LISTINGS_CSV
 
 
 if __name__ == "__main__":
-    job_listings_file = 'job_listings.csv'
-    cleaned_file = 'cleaned_job_listings.csv'
-    run_selenium_scraper(job_listings_file)
-    clean_data(job_listings_file, cleaned_file)
+    run_selenium_scraper(JOB_LISTINGS_CSV)
+    clean_data(JOB_LISTINGS_CSV, CLEANED_JOB_LISTINGS_CSV)
