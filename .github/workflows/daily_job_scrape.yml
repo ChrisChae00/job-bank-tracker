@@ -12,19 +12,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.12"
+      # Builds the Docker image
+      - name: Build Docker image
+        run: docker build -t job-scraper .
 
-      - name: Install dependencies
+      # Runs the scraper in a Docker container
+      - name: Run scraper in Docker
+        run: docker run --name scraper-container job-scraper
+
+      # Copies the job listings CSV file from the container to the host
+      - name: Copy results from Docker
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          docker cp scraper-container:/app/job_listings.csv ./job_listings.csv || echo "No job_listings.csv found"
+          docker cp scraper-container:/app/cleaned_job_listings.csv ./cleaned_job_listings.csv || echo "No cleaned_job_listings.csv found"
 
-      - name: Run scraper
-        run: python main.py # Runs the scraper and cleaner
-
+      # Commits and pushes the changes to the repository
       - name: Commit and push changes
         run: |
           git config --global user.name "github-actions[bot]"
