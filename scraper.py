@@ -146,6 +146,10 @@ def more_results_button(driver, current_article_count):
 
 def run_selenium_scraper(file_path):
     options = webdriver.ChromeOptions()
+    options.add_argument("--headless=new") # Run in headless mode
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
     try:
