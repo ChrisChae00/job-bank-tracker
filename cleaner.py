@@ -1,74 +1,108 @@
-import pandas as pd
-import os
 import re
-from contants import JOB_LISTINGS_CSV, CLEANED_JOB_LISTINGS_CSV
+import db_manager as db_mgr
+from datetime import datetime
 
-def clean_data(input_file, output_file):
-    if not os.path.exists(input_file):
-        print(f"Input file {input_file} does not exist.")
-        return
-    # Read the CSV file
+def parse_date(date_str):
+    """
+    Convert date string to ISO format (YYYY-MM-DD).
+    Returns None if parsing fails.
+    """
+    if not date_str or date_str.lower() == "n/a":
+        return None
     try:
-        df = pd.read_csv(input_file, encoding='utf-8-sig')
+         # Handle format like "January 27, 2026"
+         parsed = datetime.strptime(date_str, "%B %d, %Y")
+         return parsed.strftime("%Y-%m-%d") 
+    except ValueError:
+        return None
 
-        if 'date_posted' not in df.columns or'location' not in df.columns or 'salary' not in df.columns:
-            print(f"Input file {input_file} is missing required columns. Setting the column headers manually.")
-            column_headers = ['id', 'title', 'date_posted', 'location', 'salary']
-            # load again with specified headers
-            df = pd.read_csv(input_file, encoding='utf-8-sig', names=column_headers)
-    except Exception as e:
-        print(f"Error reading {input_file}: {e}")
-        return
-    print(f"Loaded {len(df)} records from {input_file}. Columns: {df.columns.tolist()}")
+def parse_location(location_str):
+    """
+    Split location string into city and province.
+    Example: "Toronto (ON)" -> ("Toronto", "ON")
+    """
+    if not location_str or location_str.lower() == "n/a":
+        return None, None
     
-    # date_posted: Convert to datetime and format as YYYY-MM-DD (e.g., January 1, 2026 -> 2026-01-01)
-    # to_datetime with errors='coerce' will convert invalid dates to NaT
-    df['date_posted'] = pd.to_datetime(df['date_posted'], errors='coerce').dt.strftime('%Y-%m-%d')
+    # match city and province
+    match = re.search(r'(.+?)\s*\((.+?)\)', location_str)
+    if match:
+        city = match.group(1).strip()
+        province = match.group(2).strip()
+        return city, province
 
-    # location: Standardize location names (example: Toronto (ON) -> City, Province)
-    def split_location(loc):
-        if pd.isna(loc) or loc == "N/A":
-            return pd.Series([None, None])
-        match = re.search(r'(.+?)\s*\((.+?)\)', loc)
-        if match:
-            city = match.group(1).strip()
-            province = match.group(2).strip()
-            return pd.Series([city, province])
-        return pd.Series([loc.strip(), None])
+    return location_str.strip(), None
 
-    df[['city', 'province']] = df['location'].apply(split_location)
+def parse_salary(salary_str):
+    """
+    Extract min/max salary and period from salary string.
+    Returns tuple: (min_salary, max_salary, period)
+    """
+    if not salary_str or salary_str.lower() == "n/a":
+        return None, None, None
+    
+    # Extract all numeric values from the string
+    numbers = re.findall(r'[\d,.]+', salary_str)
+    numbers = [float(num.replace(',', '')) for num in numbers if num]
 
-    # salary: Remove any non-numeric characters and convert to float
-    def extract_salary(sal):
-        if pd.isna(sal) or sal == "N/A":
-            return None, None, "N/A"
+    # Determine salary period
+    period = None
+    if "hourly" in salary_str.lower():
+        period = "hourly"
+    elif "annually" in salary_str.lower():
+        period = "annually"
+    elif "monthly" in salary_str.lower():
+        period = "monthly"
+    elif "weekly" in salary_str.lower():
+        period = "weekly"
+    elif "biweekly" in salary_str.lower():
+        period = "biweekly"
+    elif "daily" in salary_str.lower():
+        period = "daily"
+    
+    min_salary = numbers[0] if len(numbers) > 0 else None
+    max_salary = numbers[1] if len(numbers) > 1 else min_salary
+    
+    return min_salary, max_salary, period
 
-        # extract all numbers only (integers or decimals)
-        numbers = re.findall(r"[\d,.]+", sal.replace(',', ''))
-        numbers = [float(num) for num in numbers]
+def clean_jobs():
+    """
+    Main cleaning function.
+    Fetches unprocessed jobs, cleans them, and saves to jobs_cleaned table.
+    """
+    # Initialize the cleaned jobs table
+    db_mgr.init_cleaned_jobs_table()
 
-        # extract period (e.g., per year, per hour)
-        period = "N/A"
-        if "hourly" in sal.lower(): period = "hourly"
-        elif "annually" in sal.lower(): period = "annually"
+    # Fetch only unprocessed jobs
+    raw_jobs = db_mgr.get_unprocessed_jobs()
 
-        min_salary = numbers[0] if len(numbers) > 0 else None
-        max_salary = numbers[1] if len(numbers) > 1 else min_salary
+    if not raw_jobs:
+        print("No new jobs to clean.")
+        return
+    
+    # Clean each job
+    print(f"Cleaning {len(raw_jobs)} unprocessed jobs...")
+    cleaned_jobs = []
+    for job in raw_jobs:
+        city, province = parse_location(job['location'])
+        min_salary, max_salary, period = parse_salary(job['salary'])
 
-        return min_salary, max_salary, period
+        cleaned_jobs.append({
+            'id': job['id'],
+            'title': job['title'],
+            'date_posted': parse_date(job['date_posted']),
+            'city': city,
+            'province': province,
+            'min_salary': min_salary,
+            'max_salary': max_salary,
+            'salary_period': period,
+            'cleaned_at': datetime.now()
+        })
+    
+    # Save cleaned jobs to database
+    db_mgr.save_cleaned_jobs_to_db(cleaned_jobs)
+    print(f"Saved {len(cleaned_jobs)} cleaned jobs to database.")
 
-    # Apply salary extraction
-    df[['min_salary', 'max_salary', 'salary_period']] = df['salary'].apply(lambda x: pd.Series(extract_salary(x)))
-
-    # Drop original location and salary columns
-    df_cleaned = df.drop(columns=['location', 'salary'])
-
-    # Remove duplicates based on 'id'
-    df_cleaned = df_cleaned.drop_duplicates(subset=['id'])
-
-    # Save cleaned data
-    df_cleaned.to_csv(output_file, index=False, encoding='utf-8-sig')
-    print(f"Cleaned data saved to {output_file} with {len(df_cleaned)} records.")
 
 if __name__ == "__main__":
-    clean_data(JOB_LISTINGS_CSV, CLEANED_JOB_LISTINGS_CSV)
+    clean_jobs()

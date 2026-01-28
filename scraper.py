@@ -1,10 +1,6 @@
 import os
-import requests
-import csv
 import time
-import random
 from bs4 import BeautifulSoup
-from contants import JOB_LISTINGS_CSV
 import db_manager as db_mgr
 
 # Selenium Imports
@@ -226,4 +222,7 @@ def run_selenium_scraper():
 
 
 if __name__ == "__main__":
+    # Initialize database
+    db_mgr.init_db()
+    # Run scraper   
     run_selenium_scraper()

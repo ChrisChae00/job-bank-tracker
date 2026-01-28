@@ -16,11 +16,15 @@ jobs:
       - name: Build Docker image
         run: docker build -t job-scraper .
 
-      # Runs the scraper in a Docker container
-      - name: Run scraper in Docker
-        run: docker run --name scraper-container job-scraper
+      # Run scraper with existing DB mounted into the container
+      # This allows incremental scraping and cleaning
+      - name: Run scraper and cleaner in Docker
+        run: |
+          docker run --name scraper-container \
+            -v ${{ github.workspace }}:/job_listings.db:/app/job_listings.db \
+            job-scraper
 
-      # Copies the job listings Database file from the container to the host
+      # Copy the updated database from container (in case volume mount didn't persist)
       - name: Copy results from Docker
         run: |
           docker cp scraper-container:/app/job_listings.db ./job_listings.db || echo "No job_listings.db found"
@@ -30,8 +34,8 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "chore: daily job scrape [skip ci]" || echo "No changes to commit"
+          git add job_listings.db
+          git commit -m "chore(db): daily job scrape and clean [skip ci]" || echo "No changes to commit"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
