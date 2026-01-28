@@ -3,10 +3,6 @@ FROM python:3.11-slim
 
 # Install system dependencies (chromium is used for selenium)
 RUN apt-get update && apt-get install -y \
-    wget \
-    gnupg \
-    unzip \
-    curl \ 
     chromium \
     chromium-driver \
     && rm -rf /var/lib/apt/lists/*
@@ -17,6 +13,9 @@ WORKDIR /app
 # Copy the requirements file and install dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Create data directory for database
+RUN mkdir -p data
 
 # Copy the rest of the application code
 COPY . .

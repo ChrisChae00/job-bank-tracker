@@ -1,8 +1,8 @@
 import csv
 import sqlite3
 from datetime import datetime
-import db_manager as db_mgr
-from contants import DB_FILE, JOB_LISTINGS_CSV
+from src import db_manager as db_mgr
+from src.constants import DB_FILE, JOB_LISTINGS_CSV
 import os
 
 def migrate():

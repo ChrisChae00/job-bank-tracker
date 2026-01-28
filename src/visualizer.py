@@ -1,10 +1,9 @@
-print("=== Generating visualizations ===")
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates # for date formatting
 import seaborn as sns
 import os
-from contants import CLEANED_JOB_LISTINGS_CSV, VISUALIZATION_IMAGE
+from src.constants import CLEANED_JOB_LISTINGS_CSV, VISUALIZATION_IMAGE
 
 def generate_visuals(input_file):
     print("=== Starting visualizations ===", flush=True)
