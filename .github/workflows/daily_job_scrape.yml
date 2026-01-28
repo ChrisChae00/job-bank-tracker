@@ -2,8 +2,12 @@ name: Daily Job Scrape
 
 on:
   schedule:
-    - cron: "10 15 * * *" # Runs daily at 10:10am EST
+    - cron: "10 15 * * *" # Runs daily at 10:10am EST (min, hour, day, month, day of week)
   workflow_dispatch: # Allows manual trigger
+  # Triggers on pull requests to main branch
+  pull_request:
+    branches:
+      - main
 
 jobs:
   scrape_jobs:
@@ -21,7 +25,7 @@ jobs:
       - name: Run scraper and cleaner in Docker
         run: |
           docker run --name scraper-container \
-            -v ${{ github.workspace }}:/job_listings.db:/app/job_listings.db \
+            -v ${{ github.workspace }}/job_listings.db:/app/job_listings.db \
             job-scraper
 
       # Copy the updated database from container (in case volume mount didn't persist)
