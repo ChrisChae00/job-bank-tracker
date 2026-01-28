@@ -5,6 +5,7 @@ import time
 import random
 from bs4 import BeautifulSoup
 from contants import JOB_LISTINGS_CSV
+import db_manager as db_mgr
 
 # Selenium Imports
 from selenium import webdriver
@@ -144,15 +145,20 @@ def more_results_button(driver, current_article_count):
     print(f" - > Failed to load new job listings after {max_attempts} attempts. Ending scraping.")
     return False
 
-def run_selenium_scraper(file_path):
+def run_selenium_scraper():
     options = webdriver.ChromeOptions()
     options.add_argument("--headless=new") # Run in headless mode
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
 
-    options.binary_location = "/usr/bin/chromium" # Path to chromium binary
-    service = Service(executable_path="/usr/bin/chromedriver") # Path to chromedriver binary
-    
+    if os.path.exists("/usr/bin/chromium"):
+        # [FOR GITHUB ACTIONS] Use chromium and chromedriver
+        options.binary_location = "/usr/bin/chromium"
+        service = Service(executable_path="/usr/bin/chromedriver")
+    else:
+        # [FOR LOCAL TESTING] Use ChromeDriverManager to automatically handle the driver
+        service = Service(ChromeDriverManager().install())
+
     driver = webdriver.Chrome(service=service, options=options)
 
     try:
@@ -160,7 +166,8 @@ def run_selenium_scraper(file_path):
         driver.get(BASE_URL)
         time.sleep(5)  # Initial wait for page load
 
-        existing_ids = load_existing_ids(file_path)
+        existing_ids = db_mgr.get_existing_job_ids() # get existing job ids from database
+
         current_session_ids = set()
 
         section_count = 1
@@ -198,7 +205,8 @@ def run_selenium_scraper(file_path):
                         current_session_ids.add(job_id)
 
             if new_jobs:
-                save_to_csv(new_jobs, file_path)
+                # save_to_csv(new_jobs, file_path)
+                db_mgr.save_jobs_to_db(new_jobs)
                 print(f" - > {len(new_jobs)} new jobs saved.")
 
             if stop_scraping:
@@ -218,4 +226,4 @@ def run_selenium_scraper(file_path):
 
 
 if __name__ == "__main__":
-    run_selenium_scraper(JOB_LISTINGS_CSV)
+    run_selenium_scraper()

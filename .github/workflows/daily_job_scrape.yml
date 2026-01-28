@@ -2,7 +2,7 @@ name: Daily Job Scrape
 
 on:
   schedule:
-    - cron: "0 15 * * *" # Runs daily at 10:00am EST
+    - cron: "10 15 * * *" # Runs daily at 10:10am EST
   workflow_dispatch: # Allows manual trigger
 
 jobs:
@@ -20,11 +20,10 @@ jobs:
       - name: Run scraper in Docker
         run: docker run --name scraper-container job-scraper
 
-      # Copies the job listings CSV file from the container to the host
+      # Copies the job listings Database file from the container to the host
       - name: Copy results from Docker
         run: |
-          docker cp scraper-container:/app/job_listings.csv ./job_listings.csv || echo "No job_listings.csv found"
-          docker cp scraper-container:/app/cleaned_job_listings.csv ./cleaned_job_listings.csv || echo "No cleaned_job_listings.csv found"
+          docker cp scraper-container:/app/job_listings.db ./job_listings.db || echo "No job_listings.db found"
 
       # Commits and pushes the changes to the repository
       - name: Commit and push changes

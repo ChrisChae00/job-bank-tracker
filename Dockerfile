@@ -1,5 +1,5 @@
-# Use the official Python 3.12 image as the base
-FROM python:3.12-slim
+# Use the official Python 3.11 image as the base
+FROM python:3.11-slim
 
 # Install system dependencies (chromium is used for selenium)
 RUN apt-get update && apt-get install -y \
@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
     chromium-driver \
     && rm -rf /var/lib/apt/lists/*
 
-# Set the working directory
+# Set the working directory 
 WORKDIR /app
 
 # Copy the requirements file and install dependencies
