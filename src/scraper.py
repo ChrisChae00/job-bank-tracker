@@ -1,5 +1,6 @@
 import os
 import time
+import random
 from bs4 import BeautifulSoup
 from src import db_manager as db_mgr
 
@@ -225,6 +226,11 @@ def more_results_button(driver, current_article_count):
                 EC.element_to_be_clickable((By.ID, 'moreresultbutton'))
             )
             
+            # Random delay before click to appear more human-like
+            pre_click_delay = random.uniform(1.5, 3.5)
+            print(f" - > Waiting {pre_click_delay:.1f}s before clicking (human-like delay)...")
+            time.sleep(pre_click_delay)
+            
             # Attempt to click with retry strategies
             click_result = click_element_with_retry(driver, more_button)
             
@@ -239,15 +245,18 @@ def more_results_button(driver, current_article_count):
             
             print(" - > 'Show more' button clicked. Waiting for new data to load...")
 
-            # Wait for new articles to load with explicit condition
+            # Wait for new articles to load with explicit condition (increased timeout)
             try:
-                WebDriverWait(driver, 45).until(
+                WebDriverWait(driver, 60).until(
                     lambda d: len(d.find_elements(By.TAG_NAME, 'article')) > current_article_count
                 )
                 
                 new_count = len(driver.find_elements(By.TAG_NAME, 'article'))
                 print(f" - > New job listings loaded successfully. ({current_article_count} -> {new_count})")
-                time.sleep(3)
+                
+                # Random delay after successful load
+                post_load_delay = random.uniform(2, 4)
+                time.sleep(post_load_delay)
                 return True
                 
             except TimeoutException:
@@ -259,17 +268,51 @@ def more_results_button(driver, current_article_count):
                     
                 print(f" - > [{attempt}/{max_attempts}] Timeout waiting for new job listings after click.")
                 
-                # Check if button still exists and is clickable (might be at end of listings)
-                try:
-                    btn_check = driver.find_element(By.ID, 'moreresultbutton')
-                    if not btn_check.is_displayed() or not btn_check.is_enabled():
-                        print(" - > Button is no longer clickable. May have reached end of listings.")
-                        return False
-                except Exception:
-                    print(" - > Button no longer exists. Reached end of listings.")
-                    return False
+                # Wait a bit more - the site may be slow to respond (anti-bot?)
+                random_wait = random.uniform(3, 6)
+                print(f" - > Waiting {random_wait:.1f}s before checking button state...")
+                time.sleep(random_wait)
                 
-                time.sleep(2)
+                # Re-check article count after additional wait
+                new_count = len(driver.find_elements(By.TAG_NAME, 'article'))
+                if new_count > current_article_count:
+                    print(f" - > New job listings detected after extra wait. ({current_article_count} -> {new_count})")
+                    return True
+                
+                # Check if button still exists and is clickable using WebDriverWait
+                try:
+                    btn_check = WebDriverWait(driver, 10).until(
+                        EC.presence_of_element_located((By.ID, 'moreresultbutton'))
+                    )
+                    
+                    # Scroll to button and check visibility
+                    driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", btn_check)
+                    time.sleep(1)
+                    
+                    if not btn_check.is_displayed():
+                        print(" - > Button exists but is hidden. May have reached end of listings.")
+                        return False
+                    
+                    if not btn_check.is_enabled():
+                        print(" - > Button is disabled. May have reached end of listings.")
+                        return False
+                        
+                    print(f" - > Button still exists and is clickable. Retrying...")
+                    
+                except TimeoutException:
+                    print(" - > Button not found after waiting. May have reached end of listings or page issue.")
+                    # One more check with simple find
+                    try:
+                        driver.find_element(By.ID, 'moreresultbutton')
+                        print(" - > Button found with simple find. Retrying...")
+                    except Exception:
+                        # Really no button
+                        return False
+                
+                # Add random delay before retry to avoid bot detection
+                random_delay = random.uniform(2, 4)
+                print(f" - > Adding random delay of {random_delay:.1f}s before retry...")
+                time.sleep(random_delay)
                 continue
 
         except TimeoutException:
@@ -307,6 +350,13 @@ def run_selenium_scraper():
     options.add_argument("--headless=new") # Run in headless mode
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
+    
+    # Anti-bot detection options
+    options.add_argument("--window-size=1920,1080")
+    options.add_argument("--disable-blink-features=AutomationControlled")
+    options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+    options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    options.add_experimental_option('useAutomationExtension', False)
 
     if os.path.exists("/usr/bin/chromium"):
         # [FOR GITHUB ACTIONS] Use chromium and chromedriver
@@ -317,6 +367,15 @@ def run_selenium_scraper():
         service = Service(ChromeDriverManager().install())
 
     driver = webdriver.Chrome(service=service, options=options)
+    
+    # Additional anti-detection: remove webdriver property
+    driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
+        "source": """
+            Object.defineProperty(navigator, 'webdriver', {
+                get: () => undefined
+            });
+        """
+    })
 
     try:
         print("Starting browser and navigating to Job Bank website...")
@@ -329,7 +388,9 @@ def run_selenium_scraper():
 
         section_count = 1
 
-        MAX_CONSECUTIVE_DUPLICATE = 5
+        # Stop when 30 consecutive duplicates found (~1 full page of 25 jobs + margin)
+        # This ensures we don't miss new jobs that might be interspersed
+        MAX_CONSECUTIVE_DUPLICATE = 30
         duplicate_streak = 0
 
         while True:  # Adjust the range for more or fewer scrolls
