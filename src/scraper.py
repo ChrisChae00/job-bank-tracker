@@ -1,7 +1,7 @@
 import os
 import time
 from bs4 import BeautifulSoup
-import db_manager as db_mgr
+from src import db_manager as db_mgr
 
 # Selenium Imports
 from selenium import webdriver

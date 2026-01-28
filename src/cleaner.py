@@ -1,5 +1,5 @@
 import re
-import db_manager as db_mgr
+from src import db_manager as db_mgr
 from datetime import datetime
 
 def parse_date(date_str):
