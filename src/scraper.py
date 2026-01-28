@@ -10,7 +10,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.common.exceptions import TimeoutException, StaleElementReferenceException
+from selenium.common.exceptions import TimeoutException, StaleElementReferenceException, ElementClickInterceptedException
+from selenium.webdriver.common.action_chains import ActionChains
 
 # Configuration
 BASE_URL = "https://www.jobbank.gc.ca/jobsearch/jobsearch?fcid=3001&fcid=3019&fcid=3739&fcid=5395&fcid=15885&fcid=22534&fcid=22887&fcid=25803&fcid=296425&fcid=296531&fcid=297197&fcid=297520&fn21=12010&fn21=20012&fn21=21211&fn21=21223&fn21=21232&fprov=AB&fprov=BC&fprov=ON&fprov=QC&page=1&sort=D&term=data&term=software+developer&term=data+engineer"
@@ -96,48 +97,208 @@ def save_to_csv(job_data_list, filename):
             
         dict_writer.writerows(job_data_list)
 
+def dismiss_overlays(driver):
+    """Attempt to close any overlays, popups, or cookie banners that might block clicks."""
+    overlay_selectors = [
+        # Common cookie consent buttons
+        "button[id*='accept']",
+        "button[class*='accept']",
+        "button[class*='cookie']",
+        "button[id*='cookie']",
+        ".modal-close",
+        "[data-dismiss='modal']",
+        "button.close",
+        # Job Bank specific selectors if any
+        ".alert-dismissible .close",
+    ]
+    
+    for selector in overlay_selectors:
+        try:
+            elements = driver.find_elements(By.CSS_SELECTOR, selector)
+            for element in elements:
+                if element.is_displayed():
+                    try:
+                        element.click()
+                        time.sleep(0.5)
+                        print(f" - -> Dismissed overlay: {selector}")
+                    except Exception:
+                        pass
+        except Exception:
+            pass
+
+
+def wait_for_page_ready(driver, timeout=10):
+    """Wait for page to be fully loaded and ready for interaction."""
+    try:
+        WebDriverWait(driver, timeout).until(
+            lambda d: d.execute_script("return document.readyState") == "complete"
+        )
+        # Additional wait for any AJAX requests to complete
+        WebDriverWait(driver, timeout).until(
+            lambda d: d.execute_script(
+                "return (typeof jQuery === 'undefined' || jQuery.active === 0)"
+            )
+        )
+        return True
+    except Exception:
+        return True  # Continue anyway if jQuery check fails
+
+
+def click_element_with_retry(driver, element, max_retries=3):
+    """Try multiple click strategies to ensure the element is clicked."""
+    for attempt in range(max_retries):
+        try:
+            # Strategy 1: Standard Selenium click
+            if attempt == 0:
+                element.click()
+                return True
+            
+            # Strategy 2: JavaScript click
+            elif attempt == 1:
+                driver.execute_script("arguments[0].click();", element)
+                return True
+            
+            # Strategy 3: ActionChains click with move
+            else:
+                actions = ActionChains(driver)
+                actions.move_to_element(element).pause(0.5).click().perform()
+                return True
+                
+        except StaleElementReferenceException:
+            print(f" - -> Element became stale on click attempt {attempt + 1}. Re-fetching...")
+            return None  # Signal to re-fetch element
+            
+        except ElementClickInterceptedException as e:
+            print(f" - -> Click intercepted on attempt {attempt + 1}: {str(e)[:100]}")
+            # Try to dismiss any overlays
+            dismiss_overlays(driver)
+            time.sleep(1)
+            continue
+            
+        except Exception as e:
+            print(f" - -> Click attempt {attempt + 1} failed: {str(e)[:100]}")
+            time.sleep(0.5)
+            continue
+    
+    return False
+
+
 def more_results_button(driver, current_article_count):
+    """Click the 'Show more' button with robust error handling and multiple strategies."""
     max_attempts = 5
+    
     for attempt in range(1, max_attempts + 1):
         try:
             print(f" - > [{attempt}/{max_attempts}] Attempt. Looking for 'Show more' button...")
             
-            more_button = WebDriverWait(driver, 20).until(
+            # Wait for page to be ready
+            wait_for_page_ready(driver)
+            
+            # Dismiss any overlays first
+            if attempt > 1:
+                dismiss_overlays(driver)
+            
+            # Wait for button to be present in DOM
+            more_button = WebDriverWait(driver, 15).until(
+                EC.presence_of_element_located((By.ID, 'moreresultbutton'))
+            )
+            
+            # Check if button is actually visible and enabled
+            if not more_button.is_displayed():
+                print(f" - > [{attempt}/{max_attempts}] Button found but not visible. Scrolling...")
+                driver.execute_script("arguments[0].scrollIntoView({block: 'center', behavior: 'smooth'});", more_button)
+                time.sleep(2)
+            
+            if not more_button.is_enabled():
+                print(f" - > [{attempt}/{max_attempts}] Button is disabled. May have reached end of listings.")
+                return False
+            
+            # Scroll to element with offset to ensure it's not hidden by headers
+            driver.execute_script("""
+                arguments[0].scrollIntoView({block: 'center'});
+                window.scrollBy(0, -100);
+            """, more_button)
+            time.sleep(2)
+            
+            # Wait for button to be clickable
+            more_button = WebDriverWait(driver, 10).until(
                 EC.element_to_be_clickable((By.ID, 'moreresultbutton'))
             )
             
-            driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", more_button)
-            time.sleep(1.5) 
-
-            try:
-                more_button.click()
-            except Exception:
-                driver.execute_script("arguments[0].click();", more_button)
+            # Attempt to click with retry strategies
+            click_result = click_element_with_retry(driver, more_button)
+            
+            if click_result is None:
+                # Element was stale, continue to next attempt
+                time.sleep(1)
+                continue
+            elif not click_result:
+                print(f" - > [{attempt}/{max_attempts}] All click strategies failed.")
+                time.sleep(2)
+                continue
             
             print(" - > 'Show more' button clicked. Waiting for new data to load...")
 
-            WebDriverWait(driver, 30).until(
-                lambda d: len(d.find_elements(By.TAG_NAME, 'article')) > current_article_count
-            )
-            
-            print(f" - > New job listings loaded successfully.")
-            time.sleep(3) 
-            return True 
+            # Wait for new articles to load with explicit condition
+            try:
+                WebDriverWait(driver, 45).until(
+                    lambda d: len(d.find_elements(By.TAG_NAME, 'article')) > current_article_count
+                )
+                
+                new_count = len(driver.find_elements(By.TAG_NAME, 'article'))
+                print(f" - > New job listings loaded successfully. ({current_article_count} -> {new_count})")
+                time.sleep(3)
+                return True
+                
+            except TimeoutException:
+                # Check if article count changed anyway (might have missed the change)
+                new_count = len(driver.find_elements(By.TAG_NAME, 'article'))
+                if new_count > current_article_count:
+                    print(f" - > New job listings detected after timeout. ({current_article_count} -> {new_count})")
+                    return True
+                    
+                print(f" - > [{attempt}/{max_attempts}] Timeout waiting for new job listings after click.")
+                
+                # Check if button still exists and is clickable (might be at end of listings)
+                try:
+                    btn_check = driver.find_element(By.ID, 'moreresultbutton')
+                    if not btn_check.is_displayed() or not btn_check.is_enabled():
+                        print(" - > Button is no longer clickable. May have reached end of listings.")
+                        return False
+                except Exception:
+                    print(" - > Button no longer exists. Reached end of listings.")
+                    return False
+                
+                time.sleep(2)
+                continue
 
         except TimeoutException:
-            if attempt == 5:
-                print(f" - > [Terminating] {max_attempts} attempts reached without loading new job listings.")
-                break
-
-            print(f" - > [{attempt}/{max_attempts}] Timeout waiting for new job listings. Retrying...")
+            print(f" - > [{attempt}/{max_attempts}] Timeout waiting for button to appear.")
+            
+            # Check if we've reached the end of listings (button might not exist)
+            try:
+                btn = driver.find_element(By.ID, 'moreresultbutton')
+                if not btn.is_displayed():
+                    print(" - > Button exists but is hidden. May have reached end of listings.")
+                    return False
+            except Exception:
+                print(" - > Button not found. May have reached end of listings.")
+                return False
+            
             time.sleep(2)
-            continue 
+            continue
+            
+        except StaleElementReferenceException:
+            print(f" - > [{attempt}/{max_attempts}] Stale element. Page may have updated. Retrying...")
+            time.sleep(2)
+            continue
             
         except Exception as e:
-            print(f" - > [{attempt}/{max_attempts}] Exception occurred: {e}. Retrying...")
+            print(f" - > [{attempt}/{max_attempts}] Exception occurred: {type(e).__name__}: {str(e)[:150]}")
             time.sleep(2)
             continue
 
+    print(f" - > [Terminating] {max_attempts} attempts reached without loading new job listings.")
     print(f" - > Failed to load new job listings after {max_attempts} attempts. Ending scraping.")
     return False
 

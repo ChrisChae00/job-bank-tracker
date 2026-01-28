@@ -15,6 +15,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || 'main' }}
+          fetch-depth: 0 # Fetch full history for proper git operations
 
       # Builds the Docker image
       - name: Build Docker image
@@ -34,12 +37,14 @@ jobs:
           docker cp scraper-container:/app/data/job_listings.db ./data/job_listings.db || echo "No job_listings.db found"
 
       # Commits and pushes the changes to the repository
+      # Skip on pull_request events since we can't push to the triggering branch
       - name: Commit and push changes
+        if: github.event_name != 'pull_request'
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/job_listings.db
-          git commit -m "chore(db): daily job scrape and clean [skip ci]" || echo "No changes to commit"
-          git push
+          git diff --staged --quiet || git commit -m "chore(db): daily job scrape and clean [skip ci]"
+          git push origin main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
