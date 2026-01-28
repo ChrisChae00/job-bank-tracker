@@ -5,4 +5,5 @@
 __pycache__/
 
 # Data files:
-*.db
+# *.db ## ignore all db files until a better solution is found
+
