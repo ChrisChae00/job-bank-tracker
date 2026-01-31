@@ -1,6 +1,6 @@
 import sqlite3
 from datetime import datetime
-from contants import DB_FILE
+from src.constants import DB_FILE
 import os
 
 def init_db():
@@ -32,6 +32,10 @@ def save_jobs_to_db(job_list):
     
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
+    
+    # Get count before insert
+    cursor.execute("SELECT COUNT(*) FROM jobs")
+    count_before = cursor.fetchone()[0]
 
     # insert or ignore jobs into database
     # if job id already exists, skip it
@@ -42,11 +46,16 @@ def save_jobs_to_db(job_list):
     data = [(job['id'], job['title'], job['date_posted'], job['location'], job['salary'], datetime.now()) for job in job_list]
 
     cursor.executemany(query, data)
-    new_jobs_count = cursor.rowcount
+    
+    # Get count after insert
+    cursor.execute("SELECT COUNT(*) FROM jobs")
+    count_after = cursor.fetchone()[0]
+    
+    new_jobs_count = count_after - count_before
 
     conn.commit()
     conn.close()
-    print(f"Saved {new_jobs_count} new jobs to database.")
+    print(f"{new_jobs_count} new jobs saved to database.")
 
 def get_all_jobs():
     # get all jobs from database
@@ -127,6 +136,10 @@ def save_cleaned_jobs_to_db(cleaned_jobs):
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
     
+    # Get count before insert
+    cursor.execute("SELECT COUNT(*) FROM jobs_cleaned")
+    count_before = cursor.fetchone()[0]
+    
     # Insert or replace cleaned jobs into database
     query = """
         INSERT OR REPLACE INTO jobs_cleaned (
@@ -150,8 +163,13 @@ def save_cleaned_jobs_to_db(cleaned_jobs):
     ]
 
     cursor.executemany(query, data)
-    new_jobs_count = cursor.rowcount
+    
+    # Get count after insert
+    cursor.execute("SELECT COUNT(*) FROM jobs_cleaned")
+    count_after = cursor.fetchone()[0]
+    
+    new_jobs_count = count_after - count_before
 
     conn.commit()
     conn.close()
-    print(f"Saved {new_jobs_count} new cleaned jobs to database.")
+    print(f"{new_jobs_count} new cleaned jobs saved to database.")
