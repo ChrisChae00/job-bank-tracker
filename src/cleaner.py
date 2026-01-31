@@ -101,8 +101,6 @@ def clean_jobs():
     
     # Save cleaned jobs to database
     db_mgr.save_cleaned_jobs_to_db(cleaned_jobs)
-    print(f"Saved {len(cleaned_jobs)} cleaned jobs to database.")
-
 
 if __name__ == "__main__":
     clean_jobs()

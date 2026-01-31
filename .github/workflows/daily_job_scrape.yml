@@ -27,11 +27,12 @@ jobs:
       # This allows incremental scraping and cleaning
       - name: Run scraper and cleaner in Docker
         run: |
+          mkdir -p data
           docker run --name scraper-container \
-            -v ${{ github.workspace }}/data/job_listings.db:/app/data/job_listings.db \
+            -v ${{ github.workspace }}/data:/app/data \
             job-scraper
 
-      # Copy the updated database from container (in case volume mount didn't persist)
+      # Copy the updated database from container (ensure permissions/ownership are correct)
       - name: Copy results from Docker
         run: |
           docker cp scraper-container:/app/data/job_listings.db ./data/job_listings.db || echo "No job_listings.db found"

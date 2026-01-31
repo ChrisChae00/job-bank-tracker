@@ -425,7 +425,6 @@ def run_selenium_scraper():
             if new_jobs:
                 # save_to_csv(new_jobs, file_path)
                 db_mgr.save_jobs_to_db(new_jobs)
-                print(f" - > {len(new_jobs)} new jobs saved.")
 
             if stop_scraping:
                 break
