@@ -7,3 +7,5 @@ __pycache__/
 # Data files:
 # *.db ## ignore all db files until a better solution is found
 
+# Environment variables
+.env
