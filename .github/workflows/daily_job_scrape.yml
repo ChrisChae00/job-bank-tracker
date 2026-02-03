@@ -25,27 +25,19 @@ jobs:
 
       # Run scraper with existing DB mounted into the container
       # This allows incremental scraping and cleaning
+      # Run scraper and cleaner in Docker
+      # Pass AWS RDS credentials as environment variables
       - name: Run scraper and cleaner in Docker
-        run: |
-          mkdir -p data
-          docker run --name scraper-container \
-            -v ${{ github.workspace }}/data:/app/data \
-            job-scraper
-
-      # Copy the updated database from container (ensure permissions/ownership are correct)
-      - name: Copy results from Docker
-        run: |
-          docker cp scraper-container:/app/data/job_listings.db ./data/job_listings.db || echo "No job_listings.db found"
-
-      # Commits and pushes the changes to the repository
-      # Skip on pull_request events since we can't push to the triggering branch
-      - name: Commit and push changes
-        if: github.event_name != 'pull_request'
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/job_listings.db
-          git diff --staged --quiet || git commit -m "chore(db): daily job scrape and clean [skip ci]"
-          git push origin main
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        run: |
+          docker run --rm \
+            -e DB_HOST="$DB_HOST" \
+            -e DB_NAME="$DB_NAME" \
+            -e DB_USER="$DB_USER" \
+            -e DB_PASSWORD="$DB_PASSWORD" \
+            -e DB_PORT="5432" \
+            job-scraper
