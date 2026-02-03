@@ -1,175 +1,166 @@
-import sqlite3
-from datetime import datetime
-from src.constants import DB_FILE
 import os
+from dotenv import load_dotenv
+from sqlalchemy import create_engine, text, Table, Column, String, MetaData, TIMESTAMP, Float, Date
+from sqlalchemy.dialects.postgresql import insert
+from datetime import datetime
+
+# load environment variables from .env file
+load_dotenv()
+
+# generate db connection URL
+# Note: Removed the extra port variable to avoid connection string errors like 'host::5432'
+DB_URL = f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}:5432/{os.getenv('DB_NAME')}"
+
+# create database engine
+engine = create_engine(DB_URL)
+metadata = MetaData()
+
+# define jobs table
+jobs_table = Table(
+    'jobs', metadata,
+    Column('id', String, primary_key=True),
+    Column('title', String),
+    Column('date_posted', String),
+    Column('location', String),
+    Column('salary', String),
+    Column('scraped_at', TIMESTAMP)
+)
+
+# define cleaned jobs table
+jobs_cleaned_table = Table(
+    'jobs_cleaned', metadata,
+    Column('id', String, primary_key=True),
+    Column('title', String),
+    Column('date_posted', Date), # Using optimized Date type
+    Column('city', String),
+    Column('province', String),
+    Column('min_salary', Float),
+    Column('max_salary', Float),
+    Column('salary_period', String),
+    Column('cleaned_at', TIMESTAMP)
+)
 
 def init_db():
-    # connect to database
-    conn = sqlite3.connect(DB_FILE)
-    cursor = conn.cursor()
-
-    # set up database id,title,date_posted,location,salary
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS jobs (
-            id TEXT PRIMARY KEY,
-            title TEXT,
-            date_posted TEXT,
-            location TEXT,
-            salary TEXT,
-            scraped_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
-
-    conn.commit()
-    conn.close()
-    print("Database initialized successfully.")
+    """
+    Initialize the database and create tables if they don't exist.
+    """
+    try:
+        metadata.create_all(engine)
+        print("Database initialized successfully.")
+    except Exception as e:
+        print(f"Error initializing database: {e}")
 
 def save_jobs_to_db(job_list):
-    # save collected job listings to database
+    """
+    Save raw job listings to the database.
+    Uses 'INSERT ON CONFLICT DO NOTHING' to handle duplicates efficiently.
+    """
     if not job_list:
         print("No jobs to save.")
         return
-    
-    conn = sqlite3.connect(DB_FILE)
-    cursor = conn.cursor()
-    
-    # Get count before insert
-    cursor.execute("SELECT COUNT(*) FROM jobs")
-    count_before = cursor.fetchone()[0]
 
-    # insert or ignore jobs into database
-    # if job id already exists, skip it
-    query = """
-        INSERT OR IGNORE INTO jobs (id, title, date_posted, location, salary, scraped_at)
-        VALUES (?, ?, ?, ?, ?, ?)
-    """
-    data = [(job['id'], job['title'], job['date_posted'], job['location'], job['salary'], datetime.now()) for job in job_list]
+    try:
+        with engine.connect() as conn:
+            # PostgreSQL: INSERT ... ON CONFLICT DO NOTHING
+            stmt = insert(jobs_table).values([
+                {
+                    'id': job['id'],
+                    'title': job['title'],
+                    'date_posted': job['date_posted'],
+                    'location': job['location'],
+                    'salary': job['salary'],
+                    'scraped_at': datetime.now()
+                }
+                for job in job_list
+            ])
 
-    cursor.executemany(query, data)
-    
-    # Get count after insert
-    cursor.execute("SELECT COUNT(*) FROM jobs")
-    count_after = cursor.fetchone()[0]
-    
-    new_jobs_count = count_after - count_before
+            # Do not update existing jobs
+            stmt = stmt.on_conflict_do_nothing(index_elements=['id'])
+            
+            # Execute the statement
+            result = conn.execute(stmt)
+            conn.commit()
+            print(f"{result.rowcount} new jobs saved to database.")
 
-    conn.commit()
-    conn.close()
-    print(f"{new_jobs_count} new jobs saved to database.")
-
-def get_all_jobs():
-    # get all jobs from database
-    conn = sqlite3.connect(DB_FILE)
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM jobs")
-    rows = cursor.fetchall()
-    conn.close()
-    return rows
+    except Exception as e:
+        print(f"Error saving jobs to database: {e}")
 
 def get_existing_job_ids():
-    # get all job ids from database
-    conn = sqlite3.connect(DB_FILE)
-    cursor = conn.cursor()
-    cursor.execute("SELECT id FROM jobs")
-    ids = {row[0] for row in cursor.fetchall()}
-    conn.close()
-    return ids
-
-def init_cleaned_jobs_table():
     """
-    Initialize the jobs_cleaned table if it doesn't exist.
+    Fetch all job IDs currently in the database to prevent duplicate scraping.
     """
-    
-    conn = sqlite3.connect(DB_FILE)
-    cursor = conn.cursor()
-
-    # set up database jobs_cleaned
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS jobs_cleaned (
-            id TEXT PRIMARY KEY,
-            title TEXT,
-            date_posted DATE,
-            city TEXT,
-            province TEXT,
-            min_salary REAL,
-            max_salary REAL,
-            salary_period TEXT,
-            cleaned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (id) REFERENCES jobs (id)
-        )
-    """)
-
-    conn.commit()
-    conn.close()
-    print("jobs_cleaned table initialized successfully.")
-
+    try:
+        with engine.connect() as conn:
+            result = conn.execute(text("SELECT id FROM jobs"))
+            return {row._mapping['id'] for row in result}
+    except Exception as e:
+        print(f"Error fetching existing IDs: {e}")
+        return set()
 
 def get_unprocessed_jobs():
     """
-    Retrieve jobs from the 'jobs' table that have not yet been cleaned.
-    Returns jobs where the id does not exist in jobs_cleaned.
+    Retrieve jobs that exist in 'jobs' table but not in 'jobs_cleaned' table.
     """
-    conn = sqlite3.connect(DB_FILE)
-    cursor = conn.cursor()
-    cursor.execute("""
+    query = text("""
         SELECT j.id, j.title, j.date_posted, j.location, j.salary
         FROM jobs j
         LEFT JOIN jobs_cleaned jc ON j.id = jc.id
         WHERE jc.id IS NULL
     """)
 
-    rows = cursor.fetchall()
-    conn.close()
-    # Convert to list of dictionaries for easier processing
-    columns = ['id', 'title', 'date_posted', 'location', 'salary']
-    return [dict(zip(columns, row)) for row in rows]
+    try:
+        with engine.connect() as conn:
+            result = conn.execute(query)
+            # Use mappings() to safely access by name or index access for safety
+            return [
+                {
+                    'id': row._mapping['id'],
+                    'title': row._mapping['title'],
+                    'date_posted': row._mapping['date_posted'],
+                    'location': row._mapping['location'],
+                    'salary': row._mapping['salary']
+                }
+                for row in result
+            ]
+    except Exception as e:
+        print(f"Error fetching unprocessed jobs: {e}")
+        return []
 
 def save_cleaned_jobs_to_db(cleaned_jobs):
     """
     Insert cleaned job data into the jobs_cleaned table.
-    Uses INSERT OR REPLACE to handle re-processing if needed.
+    PostgreSQL: INSERT ... ON CONFLICT DO NOTHING
     """
     if not cleaned_jobs:
         print("No cleaned jobs to save.")
         return
     
-    conn = sqlite3.connect(DB_FILE)
-    cursor = conn.cursor()
-    
-    # Get count before insert
-    cursor.execute("SELECT COUNT(*) FROM jobs_cleaned")
-    count_before = cursor.fetchone()[0]
-    
-    # Insert or replace cleaned jobs into database
-    query = """
-        INSERT OR REPLACE INTO jobs_cleaned (
-            id, title, date_posted, city, province, min_salary, max_salary, salary_period, cleaned_at
-        )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)  
-    """
-    data = [
-        (
-            job['id'], 
-            job['title'], 
-            job['date_posted'], 
-            job['city'], 
-            job['province'], 
-            job['min_salary'], 
-            job['max_salary'], 
-            job['salary_period'], 
-            datetime.now()
-        ) 
-        for job in cleaned_jobs
-    ]
+    try:
+        with engine.connect() as conn:
+            # PostgreSQL: INSERT ... ON CONFLICT DO NOTHING
+            stmt = insert(jobs_cleaned_table).values([
+                {
+                    'id': job['id'],
+                    'title': job['title'],
+                    'date_posted': job['date_posted'],
+                    'city': job['city'],
+                    'province': job['province'],
+                    'min_salary': job['min_salary'],
+                    'max_salary': job['max_salary'],
+                    'salary_period': job['salary_period'],
+                    'cleaned_at': datetime.now()
+                }
+                for job in cleaned_jobs
+            ])
 
-    cursor.executemany(query, data)
-    
-    # Get count after insert
-    cursor.execute("SELECT COUNT(*) FROM jobs_cleaned")
-    count_after = cursor.fetchone()[0]
-    
-    new_jobs_count = count_after - count_before
+            # Do not update existing jobs
+            stmt = stmt.on_conflict_do_nothing(index_elements=['id'])
+            
+            # Execute the statement
+            result = conn.execute(stmt)
+            conn.commit()
+            print(f"{result.rowcount} new cleaned jobs saved to database.")
 
-    conn.commit()
-    conn.close()
-    print(f"{new_jobs_count} new cleaned jobs saved to database.")
+    except Exception as e:
+        print(f"Error saving cleaned jobs to database: {e}")
+   
