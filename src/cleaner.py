@@ -70,9 +70,6 @@ def clean_jobs():
     Main cleaning function.
     Fetches unprocessed jobs, cleans them, and saves to jobs_cleaned table.
     """
-    # Initialize the cleaned jobs table
-    db_mgr.init_cleaned_jobs_table()
-
     # Fetch only unprocessed jobs
     raw_jobs = db_mgr.get_unprocessed_jobs()
 
