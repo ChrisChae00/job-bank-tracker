@@ -24,7 +24,7 @@ def get_db_connection():
     return create_engine(db_url)
 
 @st.cache_data(ttl=3600) # Cache data for 1 hour
-def load_job_data():
+def load_jobs_data():
     """
     Load all cleaned job postings from jobs_cleaned table.
     
@@ -38,7 +38,7 @@ def load_job_data():
         SELECT 
             id,
             title,
-            data_posted,
+            date_posted,
             city,
             province,
             min_salary,
@@ -46,7 +46,7 @@ def load_job_data():
             salary_period,
             cleaned_at
         FROM jobs_cleaned
-        ORDER BY data_posted DESC
+        ORDER BY date_posted DESC
     """
     try:
         with engine.connect() as conn:
