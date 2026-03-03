@@ -164,11 +164,12 @@ with tab_location:
             horizontal=True,
             key="loc_group",
         )
+        _loc_unique = max(4, len(filtered_df[group_by.lower()].dropna().unique()))
         top_n_loc = st.slider(
             "Show top N",
             min_value=3,
-            max_value=min(20, len(filtered_df[group_by.lower()].dropna().unique())),
-            value=min(10, len(filtered_df[group_by.lower()].dropna().unique())),
+            max_value=min(20, _loc_unique),
+            value=min(10, _loc_unique),
             key="loc_topn",
         )
         sort_order = st.radio(
@@ -230,11 +231,12 @@ with tab_salary:
             ["Average (Min+Max)/2", "Min Salary", "Max Salary"],
             key="sal_metric",
         )
+        _sal_unique = max(4, len(filtered_df[salary_group.lower()].dropna().unique()))
         top_n_sal = st.slider(
             "Show top N groups",
             min_value=3,
-            max_value=min(15, len(filtered_df[salary_group.lower()].dropna().unique())),
-            value=min(8, len(filtered_df[salary_group.lower()].dropna().unique())),
+            max_value=min(15, _sal_unique),
+            value=min(8, _sal_unique),
             key="sal_topn",
         )
 
