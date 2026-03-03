@@ -5,6 +5,7 @@
 ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=Streamlit&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
 ![AWS](https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
@@ -23,14 +24,21 @@ The system architecture has undergone significant transformation to achieve auto
 
 ```mermaid
 graph RL
+    subgraph Phase4 [Phase 4: API Decoupling]
+        direction TB
+        style Phase4 fill:#fdf4fb,stroke:#d63031,stroke-width:2px
+        API[FastAPI Server] -->|SQLAlchemy ORM| RDS_P4[(AWS RDS)]
+        Streamlit_P4[Streamlit Dashboard] -->|HTTP REST API| API
+        Scraper_P4[Scraper/Cleaner] -->|Direct SQL| RDS_P4
+    end
+
     subgraph Phase3 [Phase 3: Cloud Automation]
         direction TB
         style Phase3 fill:#e6fffa,stroke:#00b894,stroke-width:2px
         GHA[GitHub Actions<br/>Daily Cron] -->|Runs| Docker[Docker Container]
         Docker -->|Scrapes & Cleans| Scraper[Scraper Logic]
         Scraper -->|Persists Data| RDS[(AWS RDS<br/>PostgreSQL)]
-        Streamlit[Streamlit Cloud] -->|Queries| RDS
-        User((User)) -->|Views| Streamlit
+        Streamlit[Streamlit Cloud] -->|Queries directly| RDS
     end
 
     subgraph Phase2 [Phase 2: Local Database]
@@ -48,6 +56,7 @@ graph RL
     %% Evolution Flow (Right to Left)
     P1_Script -.-> P2_Script
     P2_Script -.-> GHA
+    GHA -.-> API
 ```
 
 ### Phase 1: Local & Manual (CSV)
@@ -62,12 +71,18 @@ graph RL
 - **Automation**: CI scripts ran daily but committed binary DB files to the repo.
 - **Limitation**: Repository bloat due to large binary commits; database locked to single-user access.
 
-### Phase 3: Cloud Automation (Current)
+### Phase 3: Cloud Automation
 
 - **Data Storage**: **AWS RDS (PostgreSQL)**.
 - **Automation**: **GitHub Actions** runs a Dockerized container based on the scraper logic.
-- **Visualization**: **Streamlit Cloud** connects directly to AWS RDS to display real-time data.
-- **Result**: A zero-touch, fully automated pipeline with scalable cloud infrastructure.
+- **Limitation**: Streamlit Dashboard queried the database directly, creating tight coupling and exposure of DB credentials to the frontend.
+
+### Phase 4: API Decoupling (Current)
+
+- **Architecture**: **3-tier architecture** with a backend API.
+- **API Layer**: **FastAPI** serves as the middle layer, providing RESTful endpoints with Pydantic schema validation.
+- **Visualization**: **Streamlit Dashboard** fetches data securely via HTTP requests to the FastAPI backend using `httpx`.
+- **Database Scaling**: FastAPI handles database connection pooling via SQLAlchemy, preventing connection exhaustion from the dashboard.
 
 ---
 
@@ -80,9 +95,36 @@ graph RL
 
 ## Tech Stack
 
-- **Language**: Python 3.12+
+- **Language**: Python 3.11+
+- **API Backend**: FastAPI, Uvicorn, Pydantic
 - **Scraping**: Selenium, BeautifulSoup4
 - **Database**: PostgreSQL (AWS RDS), SQLAlchemy (ORM)
-- **Dashboard**: Streamlit, Pandas
+- **Dashboard**: Streamlit, Plotly, Pandas
 - **CI/CD**: GitHub Actions, Docker
 - **Environment Management**: Docker, dotenv
+
+---
+
+## Running Locally
+
+1. Create a `.env` file with your database credentials:
+
+   ```env
+   DB_HOST=your_rds_host
+   DB_NAME=postgres
+   DB_USER=postgres
+   DB_PASSWORD=your_password
+   API_BASE_URL=http://localhost:8000
+   ```
+
+2. Start the FastAPI Server:
+
+   ```bash
+   uvicorn api.main:app --reload --port 8000
+   ```
+
+3. Start the Streamlit Dashboard (in a second terminal):
+   ```bash
+   cd dashboard
+   streamlit run app.py
+   ```
