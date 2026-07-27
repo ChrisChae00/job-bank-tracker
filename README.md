@@ -24,6 +24,14 @@ The system architecture has undergone significant transformation to achieve auto
 
 ```mermaid
 graph RL
+    subgraph Phase5 [Phase 5: Cost Optimization]
+        direction TB
+        style Phase5 fill:#fff9db,stroke:#fab005,stroke-width:2px
+        API_P5[FastAPI Server] -->|SQLAlchemy ORM| Neon_P5[(Neon Postgres)]
+        Streamlit_P5[Streamlit Dashboard] -->|HTTP REST API| API_P5
+        Scraper_P5[Scraper/Cleaner] -->|Direct SQL| Neon_P5
+    end
+
     subgraph Phase4 [Phase 4: API Decoupling]
         direction TB
         style Phase4 fill:#fdf4fb,stroke:#d63031,stroke-width:2px
@@ -57,6 +65,7 @@ graph RL
     P1_Script -.-> P2_Script
     P2_Script -.-> GHA
     GHA -.-> API
+    API -.-> API_P5
 ```
 
 ### Phase 1: Local & Manual (CSV)
@@ -77,12 +86,17 @@ graph RL
 - **Automation**: **GitHub Actions** runs a Dockerized container based on the scraper logic.
 - **Limitation**: Streamlit Dashboard queried the database directly, creating tight coupling and exposure of DB credentials to the frontend.
 
-### Phase 4: API Decoupling (Current)
+### Phase 4: API Decoupling
 
 - **Architecture**: **3-tier architecture** with a backend API.
 - **API Layer**: **FastAPI** serves as the middle layer, providing RESTful endpoints with Pydantic schema validation.
-- **Visualization**: **Streamlit Dashboard** fetches data securely via HTTP requests to the FastAPI backend using `httpx`.
-- **Database Scaling**: FastAPI handles database connection pooling via SQLAlchemy, preventing connection exhaustion from the dashboard.
+- **Database**: Migrated DB connection pooling and access controls to FastAPI via SQLAlchemy to protect database credentials.
+- **Database Storage**: **AWS RDS (PostgreSQL)**.
+
+### Phase 5: Cost Optimization & Serverless DB (Current)
+
+- **Database Migration**: Successfully migrated the production database from **AWS RDS (PostgreSQL)** to **Neon (Serverless Postgres)** to optimize cloud infrastructure costs (achieving $0/month maintenance with Neon's scale-to-zero compute auto-suspend feature).
+- **Automation Status**: Paused the daily automated Cron on GitHub Actions to prevent unnecessary compute runs, but manual runs remain fully supported.
 
 ---
 
@@ -98,7 +112,7 @@ graph RL
 - **Language**: Python 3.11+
 - **API Backend**: FastAPI, Uvicorn, Pydantic
 - **Scraping**: Selenium, BeautifulSoup4
-- **Database**: PostgreSQL (AWS RDS), SQLAlchemy (ORM)
+- **Database**: PostgreSQL (AWS RDS ➔ Migrated to Neon Serverless Postgres), SQLAlchemy (ORM)
 - **Dashboard**: Streamlit, Plotly, Pandas
 - **CI/CD**: GitHub Actions, Docker
 - **Environment Management**: Docker, dotenv

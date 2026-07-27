@@ -1,8 +1,8 @@
 name: Daily Job Scrape
 
 on:
-  schedule:
-    - cron: "10 15 * * *" # Runs daily at 10:10am EST (min, hour, day, month, day of week)
+  # schedule:
+  #   - cron: "10 15 * * *" # Runs daily at 10:10am EST (min, hour, day, month, day of week)
   workflow_dispatch: # Allows manual trigger
   # Triggers on pull requests to main branch
   pull_request:
