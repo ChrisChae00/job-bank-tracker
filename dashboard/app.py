@@ -1,3 +1,6 @@
+import html
+from datetime import date
+
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -8,61 +11,175 @@ from data_loader import load_jobs_data, get_data_summary
 
 # Set page configuration
 st.set_page_config(
-    page_title="Canada IT Job Market Dashboard",
-    page_icon="🇨🇦",
+    page_title="Canada IT Labour Market Bulletin",
+    page_icon="🍁",
     layout="wide", # use full width of the browser
     initial_sidebar_state="expanded" # keep sidebar open
 )
 
-# ── Shared color palette ──────────────────────────────────────────────
-COLOR_PALETTE = ["#667eea", "#764ba2", "#f093fb", "#4facfe", "#43e97b",
-                 "#fa709a", "#fee140", "#30cfd0", "#a18cd1", "#fbc2eb"]
-GRADIENT_START = "#667eea"
-GRADIENT_END   = "#764ba2"
+# ── Shared color palette ── institutional bulletin set, not SaaS gradient ──
+COLOR_PALETTE = ["#16233F", "#C22A26", "#35707A", "#9C7A3C", "#6B7280",
+                 "#4A5C8A", "#8A3B34", "#5C8C82", "#B08D57", "#3E4C6D"]
+GRADIENT_START = "#16233F"
+GRADIENT_END   = "#35707A"
 
 # Custom CSS for styling
 st.markdown("""
     <style>
-    /* KPI Card styling */
-    .metric-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 20px;
-        border-radius: 10px;
-        color: white;
-        text-align: center;
-    }
-    .metric-value {
-        font-size: 2.5rem;
-        font-weight: bold;
-    }
-    .metric-label {
-        font-size: 1rem;
-        opacity: 0.8;
-    }
-    
-    /* Header styling */
-    .main-header {
-        font-size: 2.5rem;
-        font-weight: bold;
-        background: linear-gradient(90deg, #667eea, #764ba2);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 0;
+    @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+    :root {
+        --ink: #16233F;
+        --paper: #EAE7DC;
+        --paper-raised: #F6F4EC;
+        --red: #C22A26;
+        --steel: #35707A;
+        --rule: rgba(22, 35, 63, 0.18);
+        --grey: #6B7280;
     }
 
-    /* Chart section styling */
-    .chart-section-title {
-        font-size: 1.1rem;
-        font-weight: 600;
-        margin-bottom: 0.25rem;
+    html, body, [class*="css"] { font-family: 'IBM Plex Sans', sans-serif; }
+    .stApp { background: var(--paper); }
+
+    section[data-testid="stSidebar"] {
+        background: var(--paper-raised);
+        border-right: 1px solid var(--rule);
     }
+    section[data-testid="stSidebar"] h2 {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 0.85rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--ink);
+    }
+
+    /* Masthead */
+    .masthead-row { display: flex; align-items: flex-end; gap: 1.25rem; }
+    .masthead-mark {
+        flex: 0 0 auto;
+        background: var(--red);
+        color: var(--paper-raised);
+        font-family: 'IBM Plex Mono', monospace;
+        font-weight: 600;
+        font-size: 0.95rem;
+        letter-spacing: 0.06em;
+        padding: 0.55rem 0.7rem;
+        transform: rotate(-2deg);
+        box-shadow: 2px 2px 0 var(--ink);
+    }
+    .masthead-title { flex: 1 1 auto; }
+    .masthead-title .eyebrow {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        color: var(--red);
+        text-transform: uppercase;
+        margin-bottom: 0.15rem;
+    }
+    .masthead-title h1 {
+        font-family: 'Fraunces', serif;
+        font-weight: 600;
+        font-size: 2.6rem;
+        color: var(--ink);
+        margin: 0;
+        line-height: 1.05;
+    }
+    .masthead-meta {
+        flex: 0 0 auto;
+        text-align: right;
+        font-family: 'IBM Plex Mono', monospace;
+        color: var(--grey);
+    }
+    .masthead-meta .meta-line { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; }
+    .masthead-meta .meta-value { font-size: 1rem; color: var(--ink); font-weight: 600; }
+    .masthead-rule { margin-top: 0.9rem; border-top: 3px solid var(--ink); border-bottom: 1px solid var(--ink); height: 3px; }
+
+    /* KPI figure strip */
+    .figure-strip { display: flex; margin-top: 1.4rem; }
+    .figure-cell { flex: 1; padding: 0 1.25rem; border-left: 1px solid var(--rule); }
+    .figure-cell:first-child { border-left: none; padding-left: 0; }
+    .figure-cell .figure-label {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 0.68rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--grey);
+    }
+    .figure-cell .figure-value {
+        font-family: 'Fraunces', serif;
+        font-weight: 600;
+        font-size: 2.1rem;
+        color: var(--ink);
+        border-bottom: 2px solid var(--red);
+        display: inline-block;
+        padding-bottom: 0.1rem;
+        margin-top: 0.1rem;
+    }
+
+    [data-testid="stMetricValue"] { font-family: 'Fraunces', serif; color: var(--ink); }
+    [data-testid="stMetricLabel"] {
+        font-family: 'IBM Plex Mono', monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 0.68rem;
+        color: var(--grey);
+    }
+
+    .section-eyebrow {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--red);
+        margin-bottom: -0.3rem;
+    }
+    .fig-caption {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--grey);
+        margin: 0.2rem 0 0.6rem 0;
+    }
+
+    button[data-baseweb="tab"] {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 0.78rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--grey);
+    }
+    button[data-baseweb="tab"][aria-selected="true"] { color: var(--ink); }
+    div[data-baseweb="tab-highlight"] { background-color: var(--red) !important; }
+    div[data-baseweb="tab-border"] { background-color: var(--rule) !important; }
+
+    [data-testid="stDataFrame"] { font-family: 'IBM Plex Mono', monospace; }
+
+    .bulletin-footer {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 0.75rem;
+        color: var(--grey);
+        text-align: center;
+    }
+    .bulletin-footer a { color: var(--ink); }
     </style>
 """, unsafe_allow_html=True)
 
-# Header section
-st.markdown('<h1 class="main-header">🇨🇦 Canada IT Job Market Dashboard</h1>', unsafe_allow_html=True)
-st.markdown("Real-time insights from Job Bank Canada | Built by Chris")
-st.divider()
+# Masthead
+st.markdown(f"""
+    <div class="masthead-row">
+        <div class="masthead-mark">CA&middot;IT</div>
+        <div class="masthead-title">
+            <div class="eyebrow">Labour Market Bulletin &middot; Job Bank Canada</div>
+            <h1>Canada IT Job Market</h1>
+        </div>
+        <div class="masthead-meta">
+            <div class="meta-line">Issue Date</div>
+            <div class="meta-value">{date.today().strftime('%B %d, %Y')}</div>
+        </div>
+    </div>
+    <div class="masthead-rule"></div>
+""", unsafe_allow_html=True)
 
 # Load data
 with st.spinner("Loading job data..."):
@@ -107,50 +224,45 @@ st.sidebar.metric("Filtered Jobs", len(filtered_df))
 # KPI cards (top row)
 summary = get_data_summary(filtered_df)
 
-col1, col2, col3, col4 = st.columns(4)
-
-with col1:
-    st.metric(
-        label="Total Jobs Postings",
-        value=summary['total_jobs']
-    )
-
-with col2:
-    st.metric(
-        label="Average Annual Salary",
-        value=f"${summary['avg_salary']:,.0f}" if summary['avg_salary'] > 0 else "N/A"
-    )
-
-with col3:
-    st.metric(
-        label="Top City",
-        value=summary['top_city']
-    )
-
-with col4:
-    st.metric(
-        label="Latest Posting Date",
-        value=str(summary['latest_date'])[:10] if summary['latest_date'] else "N/A"
-    )
+st.markdown(f"""
+    <div class="figure-strip">
+        <div class="figure-cell">
+            <div class="figure-label">Total Job Postings</div>
+            <div class="figure-value">{summary['total_jobs']:,}</div>
+        </div>
+        <div class="figure-cell">
+            <div class="figure-label">Average Annual Salary</div>
+            <div class="figure-value">{f"${summary['avg_salary']:,.0f}" if summary['avg_salary'] > 0 else "N/A"}</div>
+        </div>
+        <div class="figure-cell">
+            <div class="figure-label">Top City</div>
+            <div class="figure-value">{html.escape(str(summary['top_city']))}</div>
+        </div>
+        <div class="figure-cell">
+            <div class="figure-label">Latest Posting Date</div>
+            <div class="figure-value">{str(summary['latest_date'])[:10] if summary['latest_date'] else "N/A"}</div>
+        </div>
+    </div>
+""", unsafe_allow_html=True)
 
 st.divider()
 
 # ══════════════════════════════════════════════════════════════════════
 #  Interactive Charts Section
 # ══════════════════════════════════════════════════════════════════════
-st.subheader("Analytics")
+st.markdown('<p class="section-eyebrow">Analytics</p>', unsafe_allow_html=True)
 
 tab_location, tab_salary, tab_trend, tab_keywords = st.tabs(
-    ["📍 Jobs by Location", "💰 Salary Analysis", "📈 Posting Trend", "Title Keywords"]
+    ["Jobs by Location", "Salary Analysis", "Posting Trend", "Title Keywords"]
 )
 
 # ── shared Plotly layout defaults ─────────────────────────────────────
 _layout_defaults = dict(
     plot_bgcolor="rgba(0,0,0,0)",
     paper_bgcolor="rgba(0,0,0,0)",
-    font=dict(family="Inter, sans-serif"),
+    font=dict(family="IBM Plex Mono, monospace", color="#16233F"),
     margin=dict(l=40, r=20, t=40, b=40),
-    hoverlabel=dict(bgcolor="#667eea", font_size=13, font_color="white"),
+    hoverlabel=dict(bgcolor="#16233F", font_size=12, font_color="#EAE7DC", font_family="IBM Plex Mono, monospace"),
 )
 
 # ── TAB 1 : Jobs by Location ─────────────────────────────────────────
@@ -207,6 +319,7 @@ with tab_location:
         fig_loc.update_traces(
             hovertemplate="<b>%{y}</b><br>Jobs: %{x}<extra></extra>"
         )
+        st.markdown('<p class="fig-caption">Fig. 1 &mdash; Job Postings by Location</p>', unsafe_allow_html=True)
         st.plotly_chart(fig_loc, width='stretch')
 
 # ── TAB 2 : Salary Analysis ──────────────────────────────────────────
@@ -298,6 +411,7 @@ with tab_salary:
                 showlegend=False,
                 height=420,
             )
+            st.markdown('<p class="fig-caption">Fig. 2 &mdash; Salary Distribution</p>', unsafe_allow_html=True)
             st.plotly_chart(fig_sal, width='stretch')
 
 # ── TAB 3 : Posting Trend ────────────────────────────────────────────
@@ -373,6 +487,7 @@ with tab_trend:
                 yaxis_title="Job Count",
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
             )
+            st.markdown('<p class="fig-caption">Fig. 3 &mdash; Posting Trend Over Time</p>', unsafe_allow_html=True)
             st.plotly_chart(fig_trend, width='stretch')
 
 # ── TAB 4 : Title Keywords ───────────────────────────────────────────
@@ -436,12 +551,13 @@ with tab_keywords:
             fig_kw.update_traces(
                 hovertemplate="<b>%{y}</b><br>Count: %{x}<extra></extra>"
             )
+            st.markdown('<p class="fig-caption">Fig. 4 &mdash; Frequent Title Keywords</p>', unsafe_allow_html=True)
             st.plotly_chart(fig_kw, width='stretch')
 
 st.divider()
 
 # Data preview
-st.subheader("Recent Job Postings")
+st.markdown('<p class="fig-caption">Table 1 &mdash; Recent Job Postings</p>', unsafe_allow_html=True)
 st.dataframe(
     filtered_df[['title', 'city', 'province', 'min_salary', 'max_salary', 'salary_period', 'cleaned_at']],
     width='stretch',
@@ -452,8 +568,8 @@ st.dataframe(
 st.divider()
 st.markdown(
     """
-    <div style='text-align: center; color: gray;'>
-        Data source: <a href="https://www.jobbank.gc.ca" target="_blank">Job Bank Canada</a>
+    <div class="bulletin-footer">
+        Source data &mdash; <a href="https://www.jobbank.gc.ca" target="_blank" rel="noopener">Job Bank Canada</a>. Compiled and maintained by Chris.
     </div>
     """,
     unsafe_allow_html=True
